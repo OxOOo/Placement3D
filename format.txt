@@ -1,0 +1,12 @@
+TTree类
+Checker类
+Box类：w, l, h
+Solution类
+Placement3D类
+
+约定：
+共有成员函数：IAmSoNervous
+共有成员变量：nervous
+私有成员函数：iAmSoNervous
+私有成员变量：i_am_so_nervous
+
