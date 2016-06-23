@@ -10,8 +10,8 @@ DEL = rm -f
 MKDIR = mkdir
 else
 TARGET=libplacement3d.dll
-DEL = del.exe
-MKDIR = mkdir.exe
+DEL = del
+MKDIR = mkdir
 endif
 
 all: $(TARGET)

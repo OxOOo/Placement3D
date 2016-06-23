@@ -7,18 +7,18 @@ ifeq ($(shell uname), Linux)
 TARGET = libplacement3d.so
 DEL = rm -f
 MKDIR = mkdir
-COPY = cp
+COPY = cp ../src/$(TARGET) ./
 LD_LIBRARY = LD_LIBRARY_PATH=./
 else
 TARGET = libplacement3d.dll
-DEL = del.exe
-MKDIR = mkdir.exe
-COPY = copy.exe
+DEL = del
+MKDIR = mkdir
+COPY = copy ..\src\$(TARGET) $(TARGET)
 LD_LIBRARY =
 endif
 
 all: $(OBJDIR) main.exe
-	$(COPY) ../src/$(TARGET) ./
+	$(COPY)
 
 main.exe: $(OBJDIR)/main.o
 	@echo "Now Generating $< ..."
