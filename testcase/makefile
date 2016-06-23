@@ -6,13 +6,13 @@ CXXFLAGS = -Wall -std=c++11 -I../src -L../src -lplacement3d
 ifeq ($(shell uname), Linux)
 TARGET = libplacement3d.so
 DEL = rm -f
-MKDIR = mkdir 23333
+MKDIR = mkdir
 COPY = cp ../src/$(TARGET) ./
 LD_LIBRARY = LD_LIBRARY_PATH=./
 else
 TARGET = libplacement3d.dll
 DEL = del
-MKDIR = mk
+MKDIR = mkdir
 COPY = copy ..\src\$(TARGET) $(TARGET)
 LD_LIBRARY =
 endif
