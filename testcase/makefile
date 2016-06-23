@@ -12,7 +12,7 @@ LD_LIBRARY = LD_LIBRARY_PATH=./
 else
 TARGET = libplacement3d.dll
 DEL = del
-MKDIR = mkdir
+MKDIR = mk
 COPY = copy ..\src\$(TARGET) $(TARGET)
 LD_LIBRARY =
 endif
