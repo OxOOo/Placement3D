@@ -9,7 +9,7 @@ TARGET = libplacement3d.so
 DEL = rm -f
 MKDIR = mkdir
 else
-TARGET=libplacement3d.dll
+TARGET = placement3d.dll
 DEL = del
 MKDIR = mkdir
 endif

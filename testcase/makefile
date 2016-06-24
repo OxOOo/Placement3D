@@ -1,42 +1,54 @@
 SOURCES = $(wildcard *.cpp)
 OBJDIR = objs
 OBJECTS = $(addprefix $(OBJDIR)/,$(SOURCES:%.cpp=%.o))
-CXXFLAGS = -Wall -std=c++11 -I../src -L../src -lplacement3d
+INCLUDE = ../src
+LD_LIBRARY = ../src
+LIB = -lplacement3d
+CXXFLAGS = -Wall -std=c++11
 
 ifeq ($(shell uname), Linux)
-TARGET = libplacement3d.so
 DEL = rm -f
 MKDIR = mkdir
-COPY = cp ../src/$(TARGET) ./
-LD_LIBRARY = LD_LIBRARY_PATH=./
+DLL = $(LD_LIBRARY)/libplacement3d.so
+LIBDEMO = $(LIB) -lGL -lGLU -lglut
+export LD_LIBRARY_PATH=../src
 else
-TARGET = libplacement3d.dll
 DEL = del
 MKDIR = mkdir
-COPY = copy ..\src\$(TARGET) $(TARGET)
-LD_LIBRARY =
+DLL = $(LD_LIBRARY)/placement3d.dll
+LIBDEMO = $(LIB) -lopengl32 -lglu32 -lglut32
 endif
 
-all: $(OBJDIR) main.exe
-	$(COPY)
+all: $(OBJDIR) $(DLL) main demo
 
-main.exe: $(OBJDIR)/main.o
+$(DLL):
+	cd $(LD_LIBRARY) && make
+
+main: $(OBJDIR)/main.o
 	@echo "Now Generating $< ..."
-	g++ $< -o $@ $(CXXFLAGS)
+	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $< -o $@ $(CXXFLAGS) $(LIB)
 
-run:
-	$(LD_LIBRARY) ./main.exe
+demo: $(OBJDIR)/demo.o
+	@echo "Now Generating $< ..."
+	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $< -o $@ $(CXXFLAGS) $(LIBDEMO)
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)
 
 $(OBJDIR)/%.o: %.cpp
 	@echo "Now Compiling $< ..."
-	g++ -I. -c $< -o $@ $(CXXFLAGS)
+	g++ -I$(INCLUDE) -c $< -o $@ $(CXXFLAGS)
 
 clean:
-	$(DEL) $(OBJDIR)/*.o *.exe $(TARGET)
+	$(DEL) $(OBJDIR)/*.o main demo
 
 explain:
 	@echo "User Sources: $(SOURCES)"
 	@echo "User Objects: $(OBJECTS)"
+
+run:
+	./main
+
+DEMO_ARGS ?= -s sol.txt
+run-demo:
+	./demo $(DEMO_ARGS)
