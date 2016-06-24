@@ -11,6 +11,7 @@ public:
 };
 typedef std::vector<Box> BoxList;
 
+
 class PlacedBox: public Box
 {
 public:
@@ -18,5 +19,14 @@ public:
     int x, y, z;
 };
 typedef std::vector<PlacedBox> PlacedBoxList;
+
+
+class Solution
+{
+public:
+
+private:
+    PlacedBoxList boxes;
+};
 
 #endif // BOX_H

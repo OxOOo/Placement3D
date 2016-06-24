@@ -2,7 +2,6 @@
 #define PLACEMENT_3D_H
 
 #include "box.h"
-#include "solution.h"
 
 #include <cstdlib>
 #include <string>
