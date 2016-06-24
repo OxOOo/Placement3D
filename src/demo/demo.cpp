@@ -7,17 +7,33 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 
-#include "placement3d.h"
+#include "arcball.h"
+#include <placement3d.h>
 
 using namespace std;
 
 const double MARGIN = 0.9;
+const int WIDTH = 600, HEIGHT = 600;
+
 Solution solution;
 int maxRange;
 double scaleRatio;
+ArcBall* arcBall = new ArcBall(WIDTH, HEIGHT);
 
 char *inFile = 0, *outFile = 0;
 bool _help, _s, _p;
+
+void reshape(int w, int h)
+{
+    int s = min(w, h);
+    glViewport((w - s) / 2, (h - s) / 2, s, s);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45, 1, 1, 100);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    arcBall->setBounds(w, h);
+}
 
 double trans(double x)
 {
@@ -60,7 +76,7 @@ void drawBox(const PlacedBox& box)
     double x2 = trans(box.x2), y2 = trans(box.y2), z2 = trans(box.z2);
 
     // Draw faces
-    glColor4f(0.6, 0.6, 0.6, 0.8);
+    glColor4f(0.6, 0.6, 0.6, 0.7);
     glBegin(GL_QUADS);
         // Down
         glVertex3f(x1, y1, z1);
@@ -140,17 +156,6 @@ void drawBox(const PlacedBox& box)
     glEnd();
 }
 
-void reshape(int w, int h)
-{
-    int s = min(w, h);
-    glViewport((w - s) / 2, (h - s) / 2, s, s);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45, 1, 1, 100);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
 void display()
 {
     glClearColor(0.9, 0.9, 0.9, 1.0);
@@ -167,7 +172,9 @@ void display()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glLoadIdentity();
-    gluLookAt(-1.2, -1.5, 1,  0, 0, 0,  0, 0, 1);
+    gluLookAt(0, -2, 0,  0, 0, 0,  0, 0, 1);
+    glScalef(arcBall->zoomRate, arcBall->zoomRate, arcBall->zoomRate);
+    glMultMatrixf(arcBall->Transform.M);
 
     glLineWidth(2);
     drawAixs();
@@ -212,6 +219,32 @@ int getArgs(int argc, char* argv[])
         }
     }
     return 0;
+}
+
+///  Mouse dragging
+void mouseMoveEvent(int x,int y)
+{
+	arcBall->MousePt.s.X = x;
+    arcBall->MousePt.s.Y = y;
+    arcBall->upstate();
+    glutPostRedisplay();
+}
+
+/// Mouse events (clicks and wheel up/down)
+void mouseEvent(int button, int state, int x, int y)
+{
+    if (button == 3) arcBall->zoomIn(1.1);                      // Wheel up
+    else if (button == 4) arcBall->zoomOut(1.1);                // Wheel down
+	else if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        arcBall->isClicked = true;
+        mouseMoveEvent(x,y);
+    }
+    else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+        arcBall->isClicked = false;
+
+    arcBall->upstate();
+    glutPostRedisplay();
 }
 
 int init(int argc, char* argv[])
@@ -260,10 +293,12 @@ int main(int argc, char* argv[])
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowPosition(100, 100);
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Placement 3D demo");
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
+    glutMouseFunc(mouseEvent);
+    glutMotionFunc(mouseMoveEvent);
     glutMainLoop();
 
     return 0;

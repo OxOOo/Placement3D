@@ -50,7 +50,7 @@ public:
     int GetBoxesVolume();
 
     /// Get volume of the bounding box
-    int GetBoundingBoxVolume() { return vol ? vol : GetBoundingBox().Volume(); }
+    int GetBoundingBoxVolume() { return vol ? vol : vol = GetBoundingBox().Volume(); }
 
     /// Get the wasted volume, = GetBoundingBoxVolume() – GetBoxesVolume()
     int GetWastedVolume() { return GetBoundingBoxVolume() - GetBoxesVolume(); }
