@@ -10,6 +10,9 @@ class TTreeNode
 public:
     TTreeNode();
     ~TTreeNode();
+    
+    PlacedBox box;
+    TTreeNode *l, *m, *r;
 };
 
 class TTree
@@ -41,8 +44,7 @@ public:
     
 private:
     TTreeNode* root;
-    std::vector<TTreeNode*> nodes;
-    PlacedBoxList boxes;
+    TTreeNode* nodes;
     
     /// Get T-tree node by box id
     TTreeNode* getNodeById(int id);
