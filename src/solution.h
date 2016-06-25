@@ -43,6 +43,9 @@ private:
     PlacedBoxList boxes;
     int vol, total_vol;
     Box bounding_box;
+
+    /// Check if a point in a box
+    bool pointInBox(int x, int y, int z, PlacedBoxList::iterator box);
 };
 
 #endif // SOLUTION_H
