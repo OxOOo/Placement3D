@@ -2,6 +2,7 @@
 #define PLACEMENT_3D_H
 
 #include "box.h"
+#include "solution.h"
 
 #include <string>
 #include <vector>
@@ -18,19 +19,19 @@ public:
     Placement3D(const BoxList& boxes);
     ~Placement3D();
 
-    /// Solve the 3D Placement Problem use Simulated Annealing + T-tree
-    void Solve();
-
     /// Get a placement solution
     Solution GetSolution()
     {
-        Solve();
+        solve();
         return sol;
     }
 
 private:
     BoxList boxes;
     Solution sol;
+
+    /// Solve the 3D Placement Problem use Simulated Annealing + T-tree
+    void solve();
 };
 
 #endif // PLACEMENT_3D_H

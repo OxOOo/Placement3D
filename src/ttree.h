@@ -2,6 +2,7 @@
 #define T_TREE_H
 
 #include "box.h"
+#include "solution.h"
 
 #include <vector>
 
@@ -42,9 +43,6 @@ public:
 
     /// Debug the solution
     void Debug();
-
-    /// Get the minimum bounding box of the placement according to T-tree
-    virtual int GetVolume();
 
     /// Get the optimal solution
     virtual Solution GetSolution() = 0;
