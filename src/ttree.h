@@ -18,6 +18,8 @@ public:
 class TTree
 {
 public:
+    enum SonType{Left = 0, Mid, Right};
+
     TTree(const BoxList &boxes);
     ~TTree();
 
@@ -28,7 +30,7 @@ public:
     void InsertAsChild(int p, int q);
 
     /// Insert the box p to box q's place and let box q be the k-th chlid of box p
-    void InsertToReplace(int p, int q, int k);
+    void InsertToReplace(int p, int q, SonType k);
 
     /// Swap 2 boxed at T-tree
     void Swap(int p, int q);
@@ -37,13 +39,17 @@ public:
     void Rotate(int p, int dir);
 
     /// Get the minimum bounding box of the placement according to T-tree
-    int GetVolume();
+    virtual int GetVolume() = 0;
 
     /// Get the optimal solution
-    Solution GetSolution();
+    virtual Solution GetSolution() = 0;
 
 private:
+    /// size of box
+    const int N;
+    /// root of T-tree
     TTreeNode* root;
+    /// array of T-tree nodes
     TTreeNode* nodes;
 
     /// Get T-tree node by box id

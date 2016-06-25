@@ -1,9 +1,8 @@
 #include "ttree.h"
 #include <cstdlib>
+#include <iostream>
 
 using namespace std;
-
-extern const int N;
 
 TTreeNode::TTreeNode()
 {
@@ -16,27 +15,32 @@ TTreeNode::~TTreeNode()
 }
 
 TTree::TTree(const BoxList &boxes)
+	: N((int)boxes.size())
 {
-	nodes = new TreeNode[N];
-	*root = getNodeById(0);
+	nodes = new TTreeNode[N];
+	root = getNodeById(0);
 	for (int i = 1; i < N; ++i)
 	{
 		while (1)
 		{
-			int j = rand() % 3, k = rand() % i;
-			if (j == 0 && nodes[k].l == NULL)
+			SonType j = (SonType)(rand() % 3);
+			int k = rand() % i;
+			if (j == Left && nodes[k].l == NULL)
 			{
 				nodes[k].l = &nodes[i];
+				nodes[i].fa = &nodes[k];
 				break;
 			}
-			if (j == 1 && nodes[k].m == NULL)
+			if (j == Mid && nodes[k].m == NULL)
 			{
 				nodes[k].m = &nodes[i];
+				nodes[i].fa = &nodes[k];
 				break;
 			}
-			if (j == 2 && nodes[k].r == NULL)
+			if (j == Right && nodes[k].r == NULL)
 			{
 				nodes[k].r = &nodes[i];
+				nodes[i].fa = &nodes[k];
 				break;
 			}
 		}
@@ -51,6 +55,7 @@ TTree::~TTree()
 
 void TTree::Delete(int p)
 {
+	// FIXME
 	TTreeNode* now = getNodeById(p);
 	if (now->fa->l == now) now->fa->l = NULL;
 	else
@@ -90,7 +95,8 @@ void TTree::Swap(int p, int q)
 
 void TTree::InsertAsChild(int p, int q)
 {
-	TTreeNode* nodep = getNodeById(p), nodeq = getNodeById(q);
+	TTreeNode* nodep = getNodeById(p);
+	TTreeNode* nodeq = getNodeById(q);
 	if (nodeq->l != NULL || nodeq->m != NULL || nodeq->r != NULL)
 	{
 		cerr << "It's not a leaf! Fail to Insert!!" << endl;
@@ -106,9 +112,10 @@ void TTree::InsertAsChild(int p, int q)
 		nodeq->r = nodep;
 }
 
-void TTree::InsertToReplace(int p, int q, int k)
+void TTree::InsertToReplace(int p, int q, SonType k)
 {
-	TTreeNode* nodep = getNodeById(p), nodeq = getNodeById(q);
+	TTreeNode* nodep = getNodeById(p);
+	TTreeNode* nodeq = getNodeById(q);
 	if (nodeq->fa->l == nodeq)
 		nodeq->fa->l = nodep, nodep->fa = nodeq->fa, nodeq->fa = nodep;
 	if (nodeq->fa->m == nodeq)
