@@ -12,7 +12,7 @@ public:
     ~TTreeNode();
 
     PlacedBox box;
-    TTreeNode *l, *m, *r;
+    TTreeNode *l, *m, *r, *fa;
 };
 
 class TTree
