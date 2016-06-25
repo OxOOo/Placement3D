@@ -12,12 +12,13 @@ DEL = rm -f
 MKDIR = mkdir
 DLL = $(LD_LIBRARY)/libplacement3d.so
 LIBDEMO = $(LIB) -lGL -lGLU -lglut
-export LD_LIBRARY_PATH=$(LD_LIBRARY)
+export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LD_LIBRARY)
 else
 DEL = rm
 MKDIR = mkdir
 DLL = $(LD_LIBRARY)/placement3d.dll
 LIBDEMO = $(LIB) -lopengl32 -lglu32 -lglut32
+export PATH := $(PATH);$(LD_LIBRARY)
 endif
 
 all: $(OBJDIR) $(DLL) demo
