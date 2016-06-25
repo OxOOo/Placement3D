@@ -136,10 +136,10 @@ void TTree::Move()
 {
     int p, q;
     while (1)
-	{
-		p = Random::nextInt(N), q = Random::nextInt(N);
-		if (p != q) break;
-	}
+    {
+        p = Random::nextInt(N), q = Random::nextInt(N);
+        if (p != q) break;
+    }
 
     deleteBox(p);
     if (!getNodeById(q)->IsLeaf())

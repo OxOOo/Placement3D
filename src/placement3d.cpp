@@ -73,7 +73,7 @@ bool Placement3D::SaveBoxesToFile(const string& fileName, const BoxList& boxes)
 
 bool Placement3D::SaveSolutionToFile(const string& fileName, const Solution& sol)
 {
-	FILE* fout  = fopen(fileName.c_str(), "w");
+    FILE* fout  = fopen(fileName.c_str(), "w");
     if (!fout) return 0;
 
     fprintf(fout, "%d\n", sol.Size());
@@ -96,14 +96,14 @@ void Placement3D::solve()
 
     TTree* tree = new BTTree(boxes);
     double T = INIT_TEMPERATURE;
-	double value = tree->GetSolution().GetBoundingBoxVolume() * VOLUME_FACTOR;
+    double value = tree->GetSolution().GetBoundingBoxVolume() * VOLUME_FACTOR;
 
-	for (;T > 0.01; T *= TEMPERATURE_DOWN_FACTOR)
+    for (;T > 0.01; T *= TEMPERATURE_DOWN_FACTOR)
     {
-		for (int k = 0; k < 100; k++)
+        for (int k = 0; k < 100; k++)
         {
-			// Get next status
-			TTree* newTree = tree->Clone();
+            // Get next status
+            TTree* newTree = tree->Clone();
             int oper = Random::nextInt(3), p, q, dir;
             switch (oper)
             {
@@ -125,22 +125,22 @@ void Placement3D::solve()
             // Get next status value
             Solution newSol = newTree->GetSolution();
             int newValue = newSol.GetBoundingBoxVolume() * VOLUME_FACTOR;
-			double d = newValue - value;
+            double d = newValue - value;
 
-			// Accept
-			if (d < 0 || Random::nextDouble() < exp(- d / T))
+            // Accept
+            if (d < 0 || Random::nextDouble() < exp(- d / T))
             {
                 sol = newSol;
                 value = newValue;
                 delete tree;
                 tree = newTree;
-			}
-		}
+            }
+        }
 
         tree->Print();
         cout << "temperature: " << T << " \t\t"
              << "value: "       << value << " \t\t"
              << "volume: "      << value << endl;
-	}
+    }
     delete tree;
 }
