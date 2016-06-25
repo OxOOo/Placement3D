@@ -27,6 +27,7 @@ public:
     }
 
 private:
+    const int n;
     BoxList boxes;
     Solution sol;
 

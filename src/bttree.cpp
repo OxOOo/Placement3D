@@ -11,6 +11,11 @@ BTTree::BTTree(const BoxList &boxes)
 
 BTTree::~BTTree(){}
 
+TTree* BTTree::Clone()
+{
+
+}
+
 /// Get the optimal solution
 Solution BTTree::GetSolution()
 {

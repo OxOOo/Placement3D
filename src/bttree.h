@@ -2,6 +2,7 @@
 #define B_T_TREE_H
 
 #include "ttree.h"
+
 #include <vector>
 #include <stack>
 
@@ -11,8 +12,11 @@ public:
     BTTree(const BoxList &boxes);
     virtual ~BTTree();
 
+    /// A cloned T-tree
+    TTree* Clone() override;
+
     /// Get the optimal solution
-    virtual Solution GetSolution();
+    Solution GetSolution() override;
 
 private:
     std::vector<TTreeNode*> placed_nodes;
