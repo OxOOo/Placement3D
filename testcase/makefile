@@ -26,6 +26,13 @@ main: $(OBJDIR)/main.o
 	@echo "Now Generating $< ..."
 	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
 
+debug: $(OBJDIR)/debug.o
+	@echo "Now Generating $< ..."
+	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
+
+run-debug:
+	./debug
+
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)
 
