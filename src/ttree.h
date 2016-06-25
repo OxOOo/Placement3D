@@ -26,6 +26,8 @@ public:
     /// Delete the box p
     void Delete(int p);
 
+    /// Move a box to another place randomly
+    void Move();
 
     /// Insert the box p as box q's child
     void InsertAsChild(int p, int q);

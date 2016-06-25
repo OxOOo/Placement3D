@@ -83,7 +83,7 @@ void TTree::Delete(int p)
 	now->fa = now->l = now->m = now->r = NULL;
 }
 
-void Copy(TTreeNode *nodep, TTreeNode *nodeq)
+void TTree::Copy(TTreeNode *nodep, TTreeNode *nodeq)
 {
 	nodep->l = nodeq->l;
 	nodep->m = nodeq->m;
@@ -91,7 +91,7 @@ void Copy(TTreeNode *nodep, TTreeNode *nodeq)
 	nodep->fa = nodeq->fa;
 }
 
-void Delete(TTreeNode* nodep)
+void TTree::Delete(TTreeNode* nodep)
 {
 	TTreeNode* tmp;
 	int soncnt = 0;
@@ -196,4 +196,25 @@ void TTree::Rotate(int p, int dir) /// assume that at first it is l w h
 	default:
 		break;
 	}
+}
+
+void TTree::Move()
+{
+	int p, q;
+	while (1)
+	{
+		p = rand() % N, q = rand() % N;
+		if (p != q)
+			break;
+	}
+	Delete(p);
+	TTreeNode* nodeq = getNodeById(q);
+	int soncnt = 0;
+	if (nodeq->l != NULL) ++soncnt;
+	if (nodeq->m != NULL) ++soncnt;
+	if (nodeq->r != NULL) ++soncnt;
+	if (soncnt)
+		InsertToReplace(p, q, (SonType)(rand() % 3));
+	else
+		InsertAsChild(p, q);
 }
