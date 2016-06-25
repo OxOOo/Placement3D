@@ -26,6 +26,7 @@ public:
     /// Delete the box p
     void Delete(int p);
 
+
     /// Insert the box p as box q's child
     void InsertAsChild(int p, int q);
 
@@ -52,6 +53,10 @@ private:
     /// array of T-tree nodes
     TTreeNode* nodes;
 
+    /// Delete the Tree Node p
+    void Delete(TTreeNode *nodep);
+    /// Copy q to p except box information
+    void Copy(TTreeNode *nodep, TTreeNode *nodeq);
     /// Get T-tree node by box id
     TTreeNode* getNodeById(int id);
 };
