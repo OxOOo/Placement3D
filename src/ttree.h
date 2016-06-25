@@ -2,6 +2,7 @@
 #define T_TREE_H
 
 #include "box.h"
+#include "solution.h"
 
 #include <vector>
 
@@ -11,17 +12,18 @@ public:
     TTreeNode();
     ~TTreeNode();
 
-    PlacedBox box;
     TTreeNode *l, *m, *r, *fa;
+    TTreeNode *b_l, *b_r;
+    PlacedBox box;
 };
 
 class TTree
 {
 public:
-    enum SonType{Left = 0, Mid, Right};
+    enum SonType {Left = 0, Mid, Right};
 
     TTree(const BoxList &boxes);
-    ~TTree();
+    virtual ~TTree();
 
     /// Delete the box p
     void Delete(int p);
@@ -41,13 +43,13 @@ public:
     /// Rotation box p around the axis at direction dir
     void Rotate(int p, int dir);
 
-    /// Get the minimum bounding box of the placement according to T-tree
-    virtual int GetVolume() = 0;
+    /// Debug the solution
+    void Debug();
 
     /// Get the optimal solution
     virtual Solution GetSolution() = 0;
 
-private:
+protected:
     /// size of box
     const int N;
     /// root of T-tree

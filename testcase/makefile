@@ -8,17 +8,19 @@ CXXFLAGS = -Wall -std=c++11
 
 ifeq ($(shell uname), Linux)
 DEL = rm -f
+DELDIR = rm -rf
 MKDIR = mkdir
 DLL = $(LD_LIBRARY)/libplacement3d.so
 export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LD_LIBRARY)
 else
 DEL = del
+DELDIR = rmdir /s /q
 MKDIR = mkdir
 DLL = $(LD_LIBRARY)/placement3d.dll
 export PATH := $(PATH);$(LD_LIBRARY)
 endif
 
-all: $(OBJDIR) $(DLL) main demo
+all: $(OBJDIR) $(DLL) main debug
 
 $(DLL):
 	cd $(LD_LIBRARY) && make
@@ -26,6 +28,13 @@ $(DLL):
 main: $(OBJDIR)/main.o
 	@echo "Now Generating $< ..."
 	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
+
+debug: $(OBJDIR)/debug.o
+	@echo "Now Generating $< ..."
+	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
+
+run-debug:
+	./debug
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)
@@ -35,7 +44,8 @@ $(OBJDIR)/%.o: %.cpp
 	g++ -I$(INCLUDE) -c $< -o $@ $(CXXFLAGS)
 
 clean:
-	$(DEL) $(OBJDIR)/*.o main demo
+	$(DEL) main demo debug *.exe
+	$(DELDIR) $(OBJDIR)
 
 explain:
 	@echo "User Sources: $(SOURCES)"

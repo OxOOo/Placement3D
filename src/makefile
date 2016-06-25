@@ -5,13 +5,15 @@ OBJECTS = $(addprefix $(OBJDIR)/,$(SOURCES:%.cpp=%.o))
 CXXFLAGS = -Wall -std=c++11 -fPIC
 
 ifeq ($(shell uname), Linux)
-TARGET = libplacement3d.so
 DEL = rm -f
+DELDIR = rm -rf
 MKDIR = mkdir
+TARGET = libplacement3d.so
 else
-TARGET = placement3d.dll
 DEL = del
+DELDIR = rmdir /s /q
 MKDIR = mkdir
+TARGET = placement3d.dll
 endif
 
 all: $(TARGET)
@@ -28,7 +30,8 @@ $(OBJDIR)/%.o: %.cpp %.h
 	g++ -I. -c $< -o $@ $(CXXFLAGS)
 
 clean:
-	$(DEL) $(OBJDIR)/*.o $(TARGET)
+	$(DEL) $(TARGET)
+	$(DELDIR) $(OBJDIR)
 
 explain:
 	@echo "Headers: $(HEADERS)"
