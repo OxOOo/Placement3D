@@ -67,48 +67,13 @@ void drawAixs()
            |      /
            |    /
            |  /
-y _________|/
-           O
+           |/
+y _________O
 */
-void drawBox(const PlacedBox& box)
+void drawBoxEdges(const PlacedBox& box)
 {
     double x1 = trans(box.x), y1 = trans(box.y), z1 = trans(box.z);
     double x2 = trans(box.x2), y2 = trans(box.y2), z2 = trans(box.z2);
-
-    // Draw faces
-    glColor4f(0.6, 0.6, 0.6, 0.7);
-    glBegin(GL_QUADS);
-        // Down
-        glVertex3f(x1, y1, z1);
-        glVertex3f(x2, y1, z1);
-        glVertex3f(x2, y2, z1);
-        glVertex3f(x1, y2, z1);
-        // Up
-        glVertex3f(x1, y1, z2);
-        glVertex3f(x2, y1, z2);
-        glVertex3f(x2, y2, z2);
-        glVertex3f(x1, y2, z2);
-        // Left
-        glVertex3f(x1, y1, z1);
-        glVertex3f(x1, y2, z1);
-        glVertex3f(x1, y2, z2);
-        glVertex3f(x1, y1, z2);
-        // Right
-        glVertex3f(x2, y1, z1);
-        glVertex3f(x2, y2, z1);
-        glVertex3f(x2, y2, z2);
-        glVertex3f(x2, y1, z2);
-        // Front
-        glVertex3f(x1, y1, z1);
-        glVertex3f(x2, y1, z1);
-        glVertex3f(x2, y1, z2);
-        glVertex3f(x1, y1, z2);
-        // Back
-        glVertex3f(x1, y2, z1);
-        glVertex3f(x2, y2, z1);
-        glVertex3f(x2, y2, z2);
-        glVertex3f(x1, y2, z2);
-    glEnd();
 
     // Draw edges
     glColor3f(0, 0, 0);
@@ -156,12 +121,49 @@ void drawBox(const PlacedBox& box)
     glEnd();
 }
 
-void display()
+void drawBoxFaces(const PlacedBox& box)
 {
-    glClearColor(0.9, 0.9, 0.9, 1.0);
-    glEnable (GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    double x1 = trans(box.x), y1 = trans(box.y), z1 = trans(box.z);
+    double x2 = trans(box.x2), y2 = trans(box.y2), z2 = trans(box.z2);
 
+    // Draw faces
+    glColor4f(0.6, 0.6, 0.6, 0.7);
+    glBegin(GL_QUADS);
+        // Down
+        glVertex3f(x1, y1, z1);
+        glVertex3f(x2, y1, z1);
+        glVertex3f(x2, y2, z1);
+        glVertex3f(x1, y2, z1);
+        // Up
+        glVertex3f(x1, y1, z2);
+        glVertex3f(x2, y1, z2);
+        glVertex3f(x2, y2, z2);
+        glVertex3f(x1, y2, z2);
+        // Left
+        glVertex3f(x1, y1, z1);
+        glVertex3f(x1, y2, z1);
+        glVertex3f(x1, y2, z2);
+        glVertex3f(x1, y1, z2);
+        // Right
+        glVertex3f(x2, y1, z1);
+        glVertex3f(x2, y2, z1);
+        glVertex3f(x2, y2, z2);
+        glVertex3f(x2, y1, z2);
+        // Front
+        glVertex3f(x1, y1, z1);
+        glVertex3f(x2, y1, z1);
+        glVertex3f(x2, y1, z2);
+        glVertex3f(x1, y1, z2);
+        // Back
+        glVertex3f(x1, y2, z1);
+        glVertex3f(x2, y2, z1);
+        glVertex3f(x2, y2, z2);
+        glVertex3f(x1, y2, z2);
+    glEnd();
+}
+
+void setBlend()
+{
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH, GL_NICEST);
 
@@ -170,6 +172,15 @@ void display()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void display()
+{
+    glClearColor(1, 1, 1, 0);
+    glEnable (GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    setBlend();
 
     glLoadIdentity();
     gluLookAt(0, -2, 0,  0, 0, 0,  0, 0, 1);
@@ -180,7 +191,12 @@ void display()
     drawAixs();
 
     for (auto i = solution.BoxesBegin(); i != solution.BoxesEnd(); i++)
-        drawBox(*i);
+        drawBoxEdges(*i);
+
+    glDepthMask(GL_FALSE);
+    for (auto i = solution.BoxesBegin(); i != solution.BoxesEnd(); i++)
+        drawBoxFaces(*i);
+    glDepthMask(GL_TRUE);
 
     glFlush();
     glutSwapBuffers();
@@ -224,7 +240,7 @@ int getArgs(int argc, char* argv[])
 ///  Mouse dragging
 void mouseMoveEvent(int x,int y)
 {
-	arcBall->MousePt.s.X = x;
+    arcBall->MousePt.s.X = x;
     arcBall->MousePt.s.Y = y;
     arcBall->upstate();
     glutPostRedisplay();
@@ -235,7 +251,7 @@ void mouseEvent(int button, int state, int x, int y)
 {
     if (button == 3) arcBall->zoomIn(1.1);                      // Wheel up
     else if (button == 4) arcBall->zoomOut(1.1);                // Wheel down
-	else if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    else if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
         arcBall->isClicked = true;
         mouseMoveEvent(x,y);
@@ -291,7 +307,7 @@ int main(int argc, char* argv[])
 {
     if (init(argc, argv)) return 1;
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Placement 3D demo");

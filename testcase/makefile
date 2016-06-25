@@ -10,11 +10,12 @@ ifeq ($(shell uname), Linux)
 DEL = rm -f
 MKDIR = mkdir
 DLL = $(LD_LIBRARY)/libplacement3d.so
-export LD_LIBRARY_PATH=$(LD_LIBRARY)
+export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LD_LIBRARY)
 else
 DEL = del
 MKDIR = mkdir
 DLL = $(LD_LIBRARY)/placement3d.dll
+export PATH := $(PATH);$(LD_LIBRARY)
 endif
 
 all: $(OBJDIR) $(DLL) main demo
@@ -41,7 +42,7 @@ $(OBJDIR)/%.o: %.cpp
 	g++ -I$(INCLUDE) -c $< -o $@ $(CXXFLAGS)
 
 clean:
-	$(DEL) $(OBJDIR)/*.o main demo
+	$(DEL) $(OBJDIR)/*.o main demo debug
 
 explain:
 	@echo "User Sources: $(SOURCES)"

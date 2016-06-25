@@ -19,13 +19,14 @@ public:
 class TTree
 {
 public:
-    enum SonType{Left = 0, Mid, Right};
+    enum SonType {Left = 0, Mid, Right};
 
     TTree(const BoxList &boxes);
     virtual ~TTree();
 
     /// Delete the box p
     void Delete(int p);
+
 
     /// Insert the box p as box q's child
     void InsertAsChild(int p, int q);
@@ -56,6 +57,10 @@ protected:
     /// array of T-tree nodes
     TTreeNode* nodes;
 
+    /// Delete the Tree Node p
+    void Delete(TTreeNode *nodep);
+    /// Copy q to p except box information
+    void Copy(TTreeNode *nodep, TTreeNode *nodeq);
     /// Get T-tree node by box id
     TTreeNode* getNodeById(int id);
 };
