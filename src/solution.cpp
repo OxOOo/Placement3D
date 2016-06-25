@@ -26,7 +26,7 @@ int Solution::GetBoxesVolume()
     return total_vol;
 }
 
-bool Solution::Checkt()
+bool Solution::Check()
 {
-    
+
 }

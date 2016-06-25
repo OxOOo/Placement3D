@@ -36,8 +36,8 @@ public:
     bool Check();
 
     /// Iterators of boxes
-    PlacedBoxList::iterator BoxesBegin() { return boxes.begin(); }
-    PlacedBoxList::iterator BoxesEnd() { return boxes.end(); }
+    PlacedBoxList::const_iterator BoxesBegin() { return boxes.begin(); }
+    PlacedBoxList::const_iterator BoxesEnd() { return boxes.end(); }
 
 private:
     PlacedBoxList boxes;
