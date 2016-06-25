@@ -271,8 +271,8 @@ int init(int argc, char* argv[])
         printf("Usage: %s [OPTIONS]\n"
                "OPTIONS:\n"
                "  --help          Show this information\n"
-               "  -s <file>       Load a placement solution form <file>\n"
-               "  -p <file>       Load an unsolved placement problem form <file>\n"
+               "  -s <file>       Load a placement solution from <file>\n"
+               "  -p <file>       Load an unsolved placement problem from <file>\n"
                "  -o <file>       Save the placement solution into <file> (with -p option)\n", argv[0]);
         return 1;
     }

@@ -9,24 +9,28 @@ CXXFLAGS = -Wall -std=c++11
 
 ifeq ($(shell uname), Linux)
 DEL = rm -f
+DELDIR = rm -rf
 MKDIR = mkdir
+TARGET = demo
 DLL = $(LD_LIBRARY)/libplacement3d.so
 LIBDEMO = $(LIB) -lGL -lGLU -lglut
 export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LD_LIBRARY)
 else
-DEL = rm
+DEL = del
+DELDIR = rmdir /s /q
 MKDIR = mkdir
+TARGET = demo.exe
 DLL = $(LD_LIBRARY)/placement3d.dll
 LIBDEMO = $(LIB) -lopengl32 -lglu32 -lglut32
 export PATH := $(PATH);$(LD_LIBRARY)
 endif
 
-all: $(OBJDIR) $(DLL) demo
+all: $(OBJDIR) $(DLL) $(TARGET)
 
 $(DLL):
 	cd $(LD_LIBRARY) && make
 
-demo: $(OBJECTS)
+$(TARGET): $(OBJECTS)
 	@echo $(OBJECTS)
 	@echo "Now Generating $< ..."
 	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIBDEMO)
@@ -39,8 +43,8 @@ $(OBJDIR)/%.o: %.cpp
 	g++ -I$(INCLUDE) -c $< -o $@ $(CXXFLAGS)
 
 clean:
-	$(DEL) $(OBJDIR)/*.o demo
-	$(DEL) -r $(OBJDIR)
+	$(DEL) $(TARGET)
+	$(DELDIR) $(OBJDIR)
 
 explain:
 	@echo "User Sources: $(SOURCES)"
@@ -48,4 +52,4 @@ explain:
 
 DEMO_ARGS ?= -s sol.txt
 run:
-	./demo $(DEMO_ARGS)
+	./$(TARGET) $(DEMO_ARGS)
