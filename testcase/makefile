@@ -31,6 +31,13 @@ main: $(OBJDIR)/main.o
 	@echo "Now Generating $< ..."
 	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
 
+debug: $(OBJDIR)/debug.o
+	@echo "Now Generating $< ..."
+	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
+
+run-debug:
+	./debug
+
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)
 
@@ -39,8 +46,12 @@ $(OBJDIR)/%.o: %.cpp
 	g++ -I$(INCLUDE) -c $< -o $@ $(CXXFLAGS)
 
 clean:
+<<<<<<< HEAD
 	$(DEL) $(TARGET)
 	$(DELDIR) $(OBJDIR)
+=======
+	$(DEL) $(OBJDIR)/*.o main demo debug
+>>>>>>> 436d390e7603794af22b66c8c6997ede502fb0ad
 
 explain:
 	@echo "User Sources: $(SOURCES)"
