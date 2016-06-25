@@ -1,3 +1,4 @@
+#include "random.h"
 #include "ttree.h"
 
 #include <cstdlib>
@@ -26,8 +27,8 @@ TTree::TTree(const BoxList &boxes)
     {
         while (1)
         {
-            SonType j = (SonType)(rand() % 3);
-            int k = rand() % i;
+            SonType j = (SonType)Random::nextInt(3);
+            int k = Random::nextInt(i);
             if (j == Left && nodes[k].l == NULL)
             {
                 nodes[k].l = &nodes[i];
@@ -73,7 +74,7 @@ void TTree::deleteNode(TTreeNode* nodep)
         bool flag = 1;
         while (flag)
         {
-            SonType i = (SonType)(rand() % 3);
+            SonType i = (SonType)Random::nextInt(3);
             if (i == Left  && nodep->l != NULL) tmp = nodep->l ,flag = 0;
             if (i == Mid   && nodep->m != NULL) tmp = nodep->m ,flag = 0;
             if (i == Right && nodep->r != NULL) tmp = nodep->r ,flag = 0;
@@ -99,7 +100,7 @@ void TTree::insertAsChild(int p, int q)
         return ;
     }
     nodep->fa = nodeq;
-    SonType i = (SonType)(rand() % 3);
+    SonType i = (SonType)Random::nextInt(3);
     if (i == Left)
         nodeq->l = nodep;
     if (i == Mid)
@@ -134,11 +135,11 @@ TTree* TTree::Clone()
 void TTree::Move(int p)
 {
     deleteBox(p);
-    int q = rand() % N;
+    int q = Random::nextInt(N);
     if (!getNodeById(q)->IsLeaf())
-        insertToReplace(p, q, (SonType)(rand() % 3));
-    else if (rand() & 1)
-        insertToReplace(p, q, (SonType)(rand() % 3));
+        insertToReplace(p, q, (SonType)Random::nextInt(3));
+    else if (Random::nextInt(2))
+        insertToReplace(p, q, (SonType)Random::nextInt(3));
     else
         insertAsChild(p, q);
 }

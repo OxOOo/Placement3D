@@ -1,5 +1,6 @@
-#include "placement3d.h"
+#include "random.h"
 #include "bttree.h"
+#include "placement3d.h"
 
 #include <cmath>
 #include <cstdio>

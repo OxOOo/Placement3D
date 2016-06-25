@@ -47,6 +47,9 @@ public:
     /// Rotation box p around the axis at direction dir
     void Rotate(int p, int dir);
 
+    /// Print the T-tree
+    void Print();
+
     /// A cloned T-tree
     virtual TTree* Clone();
 
