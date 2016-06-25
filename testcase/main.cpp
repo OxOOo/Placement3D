@@ -1,11 +1,14 @@
 #include "placement3d.h"
 
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
+
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-    cout << "Hello World2" << endl;
-    Placement3D::LoadBoxesFromFile("");
+    srand(time(0));
+
     return 0;
 }
