@@ -77,9 +77,9 @@ void TTree::Delete(int p)
 		tmp = NULL;
 	Delete(tmp);
 	Copy(tmp, now);
-	if (now->fa->l == nodep) now->fa->l = tmp;
-	if (now->fa->m == nodep) now->fa->m = tmp;
-	if (now->fa->r == nodep) now->fa->r = tmp;
+	if (now->fa->l == now) now->fa->l = tmp;
+	if (now->fa->m == now) now->fa->m = tmp;
+	if (now->fa->r == now) now->fa->r = tmp;
 	now->fa = now->l = now->m = now->r = NULL;
 }
 
@@ -94,7 +94,6 @@ void Copy(TTreeNode *nodep, TTreeNode *nodeq)
 void Delete(TTreeNode* nodep)
 {
 	TTreeNode* tmp;
-	SonType i;
 	int soncnt = 0;
 	if (nodep->l != NULL) ++soncnt;
 	if (nodep->m != NULL) ++soncnt;
@@ -104,7 +103,7 @@ void Delete(TTreeNode* nodep)
 		bool flag = 1;
 		while (flag)
 		{
-			i = (SonType) (rand() % 3);
+			SonType i = (SonType)(rand() % 3);
 			if (i == Left  && nodep->l != NULL) tmp = nodep->l ,flag = 0;
 			if (i == Mid   && nodep->m != NULL) tmp = nodep->m ,flag = 0;
 			if (i == Right && nodep->r != NULL) tmp = nodep->r ,flag = 0;
@@ -170,4 +169,31 @@ void TTree::InsertToReplace(int p, int q, SonType k)
 		nodep->m = nodeq;
 	if (k == Right)
 		nodep->r = nodeq;
+}
+
+void TTree::Rotate(int p, int dir) /// assume that at first it is l w h
+{
+	TTreeNode* nodep = getNodeById(p);
+	switch (dir)
+	{
+	case 1: /// l h w
+		swap(nodep->box.h, nodep->box.w);
+		break;
+	case 2: /// w l h
+		swap(nodep->box.l, nodep->box.w);
+		break;
+	case 3: /// w h l
+		swap(nodep->box.l, nodep->box.w); /// w l h
+		swap(nodep->box.w, nodep->box.h);
+		break;
+	case 4: /// h l w
+		swap(nodep->box.l, nodep->box.h); /// h w l
+		swap(nodep->box.w, nodep->box.h);
+		break;
+	case 5: /// h w l
+		swap(nodep->box.h, nodep->box.l);
+		break;
+	default:
+		break;
+	}
 }
