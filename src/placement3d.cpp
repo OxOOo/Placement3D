@@ -1,5 +1,7 @@
 #include "placement3d.h"
+#include "bttree.h"
 
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -7,7 +9,7 @@
 using namespace std;
 
 Placement3D::Placement3D(const BoxList& boxes)
-    : boxes(boxes)
+    : n(boxes.size()), boxes(boxes)
 {
 
 }
@@ -26,7 +28,7 @@ BoxList Placement3D::LoadBoxesFromFile(const string& fileName)
     fscanf(fin, "%d", &n);
     for (int i = 0; i < n; i++)
     {
-        int x, y, z, l, w, h;
+        int l, w, h;
         fscanf(fin, "%d%d%d", &l, &w, &h);
         boxes.push_back(Box(l, w, h));
     }
@@ -64,7 +66,8 @@ bool Placement3D::SaveSolutionToFile(const string& fileName, const Solution& sol
 
 }
 
+/// Simulated Annealing
 void Placement3D::solve()
 {
-
+    
 }

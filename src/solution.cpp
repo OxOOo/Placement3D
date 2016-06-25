@@ -21,12 +21,11 @@ Box Solution::GetBoundingBox()
 int Solution::GetBoxesVolume()
 {
     if (total_vol) return total_vol;
-    for (auto box : boxes)
-        total_vol += box.Volume();
+    for (auto box : boxes) total_vol += box.Volume();
     return total_vol;
 }
 
-bool Solution::Checkt()
+bool Solution::Check()
 {
-    
+
 }
