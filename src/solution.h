@@ -8,7 +8,7 @@ class Solution
 public:
     Solution() : vol(0), total_vol(0), bounding_box() {}
 
-    int Size() { return boxes.size(); }
+    int Size() const { return boxes.size(); }
 
     void Add(PlacedBox& box) { boxes.push_back(box); }
     void Add(int x, int y, int z, int l, int w, int h) { boxes.push_back(PlacedBox(x, y, z, l, w, h)); }
@@ -36,8 +36,8 @@ public:
     bool Check();
 
     /// Iterators of boxes
-    PlacedBoxList::iterator BoxesBegin() { return boxes.begin(); }
-    PlacedBoxList::iterator BoxesEnd() { return boxes.end(); }
+    PlacedBoxList::const_iterator BoxesBegin() const { return boxes.begin(); }
+    PlacedBoxList::const_iterator BoxesEnd() const { return boxes.end(); }
 
 private:
     PlacedBoxList boxes;

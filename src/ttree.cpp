@@ -132,10 +132,16 @@ TTree* TTree::Clone()
 
 }
 
-void TTree::Move(int p)
+void TTree::Move()
 {
+    int p, q;
+    while (1)
+	{
+		p = Random::nextInt(N), q = Random::nextInt(N);
+		if (p != q) break;
+	}
+
     deleteBox(p);
-    int q = Random::nextInt(N);
     if (!getNodeById(q)->IsLeaf())
         insertToReplace(p, q, (SonType)Random::nextInt(3));
     else if (Random::nextInt(2))
@@ -179,6 +185,11 @@ void TTree::Rotate(int p, int dir) // assume that at first it is l w h
     default:
         break;
     }
+}
+
+void TTree::Print() const
+{
+
 }
 
 void TTree::Debug()

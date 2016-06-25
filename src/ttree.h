@@ -38,8 +38,8 @@ public:
     TTree(const BoxList &boxes);
     virtual ~TTree();
 
-    /// Move the box p
-    void Move(int p);
+    /// Move a box to another place randomly
+    void Move();
 
     /// Swap 2 boxed at T-tree
     void Swap(int p, int q);
@@ -48,7 +48,7 @@ public:
     void Rotate(int p, int dir);
 
     /// Print the T-tree
-    void Print();
+    void Print() const;
 
     /// A cloned T-tree
     virtual TTree* Clone();
@@ -58,7 +58,6 @@ public:
 
     /// Debug the solution
     void Debug();
-
 
 protected:
     /// size of box

@@ -59,12 +59,32 @@ Solution Placement3D::LoadSolutionFromFile(const string& fileName)
 
 bool Placement3D::SaveBoxesToFile(const string& fileName, const BoxList& boxes)
 {
+    FILE* fout  = fopen(fileName.c_str(), "w");
+    if (!fout) return 0;
 
+    int n = boxes.size();
+    fprintf(fout, "%d\n", n);
+    for (int i = 0; i < n; i++)
+        fprintf(fout, "%d %d %d\n", boxes[i].l, boxes[i].w, boxes[i].h);
+    fclose(fout);
+
+    return 1;
 }
 
 bool Placement3D::SaveSolutionToFile(const string& fileName, const Solution& sol)
 {
+	FILE* fout  = fopen(fileName.c_str(), "w");
+    if (!fout) return 0;
 
+    fprintf(fout, "%d\n", sol.Size());
+    for (auto it = sol.BoxesBegin(); it != sol.BoxesEnd(); ++it)
+    {
+        fprintf(fout, "%d %d %d  ", it->x, it->y, it->z);
+        fprintf(fout, "%d %d %d\n", it->l, it->w, it->h);
+    }
+    fclose(fout);
+
+    return 1;
 }
 
 /// Simulated Annealing
@@ -87,9 +107,8 @@ void Placement3D::solve()
             int oper = Random::nextInt(3), p, q, dir;
             switch (oper)
             {
-            case 0: // Move p
-                p = Random::nextInt(n);
-                newTree->Move(p);
+            case 0: // Move
+                newTree->Move();
                 break;
             case 1: // Swap p q
                 p = Random::nextInt(n);
