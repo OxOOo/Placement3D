@@ -3,14 +3,14 @@
 
 \section{算法简介}
 	使用论文~[1]~中的算法，把箱子的放置方案与一棵~T-tree~对应，然后使用模拟退火算法对~T-tree~进行调整，求出最小包围长方体的体积。
-	
+
 \subsection{T-tree}
 	TTree是一颗三叉树，每一种3维箱子的放置方案，都对应一颗TTree。在TTree中如果B是A的左儿子，表示B在A箱子的上面，中儿子表示B在A 箱子的左边,右儿子表示B在A箱子的右边。对于一颗TTree，我们可以通过一种方式，将它分解成若干二叉树，从而构造出该TTree对应的3维箱子的放置方案
 
 
 \subsection{模拟退火}
 	现在，一棵~T-tree~对应了唯一一种放置方案。下面使用模拟退火算法，对~T-tree~进行调整，以求出最小包围长方体的体积。
-	
+
 	首先随机生成一棵~T-tree，然后在模拟退火中调整该树，以产生相邻解。调整的方法主要有~3~种：
 	\begin{itemize}
 		\item Move：把一个箱子移到另一处；
@@ -52,37 +52,42 @@
 
 \subsection{Placement3D}
 	类~Placement3D~为求解该类问题提供一个接口，使用~BoxList~构造，其中~\texttt{solve()}~函数使用模拟退火调整~T-tree，\texttt{GetSolution()}~函数返回求得的解。剩下一些成员函数用于设置在模拟退火中的参数。
-	
+
 \subsection{TTree}
 	类~TTree~实现了在参考文献中描述的~T-tree~的一个框架，用于实现模拟退火调整过程中对~T-tree~的各种操作，即~\texttt{Move()}，\texttt{Swap()}~和~\texttt{Rotate()}。其中也实现了若干对~T-tree~插入、删除的函数。
-	
+
 	TTree~主要使用一个~BoxList~构造，构造的结果是随机产生一棵合法的~T-tree。此外还有一个复制构造函数，实现了深层复制，用于在模拟退火中初始化相邻解。
-	
+
 	TTree~还包含一个纯虚函数~\texttt{GetSolution()}，用于求解该~T-tree~表示的放置方案。由于论文~[3]~中提到对于一种放置方案，可以构造多种含义不同的~T-tree，因此该函数设计为纯虚函数，由~TTree~类派生的不同含义的~T-tree~类去实现。
-	
+
 \subsection{BTTree}
 	该类是~TTree~的一种实现，即实现了成员函数~\texttt{GetSolution()}。由于计算方案时要把原来三叉的~T-tree~转化为若干棵二叉树，所以称其为``Binary T-ree''，也就是~BTTree~类。
-	
+
 	在~\texttt{GetSolution()}~中，会调用该类的成员函数~\texttt{treePacking()}~去对该~T-tree~进行放置，放置过程中调用~\texttt{treeDecomposition()}~把~T-tree~分解成二叉树与若干和这个二叉树相邻的节点，然后调用~\texttt{binaryTreePacking()}~对二叉树的每个节点进行放置。\texttt{placeModule()}~则是对单独的一个点进行放置。
-	
+
 \section{测试}
 	下面是测试过程，环境为~Linux(Ubuntu 16.04)。
 
 	\begin{center}
 	\begin{tabular}{|c|c|c|c|c|}
 		\hline
-		编号		& 箱子数		& 用时(s)	& 总体积	& 浪费率 \\ \hline
-		2~000	& 29523287.873	& 0.010			&			& 0.629	\\ \hline
-		4~000	& 41269900.360	& 0.021			&			& 3.285		\\ \hline
-		6~000	& 50283650.356	& 0.034						& 9.200			\\ \hline
-		8~000	& 57948829.865	& 0.038						& 17.538							\\ \hline
-		10~000	& 65027544.650	& 0.050						& 31.311							\\ \hline
+		编号		& 箱子数  & 用时(s)	& 总箱子体积	& 浪费率 \\ \hline
+		1	     & 2	  & 0.1	    & 380	    & 13.636%	\\ \hline
+		2	     & 5	  & 1.5		& 678		& 16.296%	\\ \hline
+		3	     & 8	  & 7.1		& 999		& 14.615%	\\ \hline
+		4	     & 10     & 13		& 1311		& 12.600%	\\ \hline
+		5	     & 15	  & 47		& 2976		& 9.818%	\\ \hline
+		6	     & 18	  & 93		& 1859		& 13.935%	\\ \hline
+		7	     & 20	  & 135		& 2866		& 14.702%	\\ \hline
+		8	     & 25	  & 235		& 5215		& 11.610%	\\ \hline
+		9	     & 28	  & 328		& 4201		& 6.644%	\\ \hline
+		10	     & 30	  & 413		& 4808		& 4.603%	\\ \hline
 	\end{tabular}
 \end{center}
 
 \section{演示程序}
 	为了让数据可视化，我们还用~OpenGL~写了一个~demo，能够实现对问题解的三维显示。
-	
+
 	例如，对于论文中的样例，有六个箱子，相应数据存储为~\texttt{box.txt}：
 
 	\framebox[13.2cm][l]{\small\shortstack[l]{
@@ -103,11 +108,11 @@
 	}}
 
 等待几秒后，便会给出求得的放置方案的三维显示，并可随意拖动、缩放：
-	
+
 %	\begin{figure}[H]
 %		\centering\includegraphics[width=11cm]{figure/p3.png}
 %	\end{figure}
-	
+
 	该解会被保存到~\texttt{sol.txt}~中，并且终端会输出如下信息：
 
 	\framebox[13.2cm][l]{\small\shortstack[l]{
@@ -118,7 +123,7 @@
 		\texttt{Wasted volume: 0} \\ \\
 		\texttt{Wasted volume ratio: 0.000\%}
 	}}
-	
+
 \section{参考文献}
 	\begin{itemize}
 		\item $[1]$ Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2004. Temporal floorplanning using the T-tree formu-lation. In Proceedings of International Conference on Computer-Aided Design. 300–305.
