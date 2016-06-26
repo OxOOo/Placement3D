@@ -56,7 +56,7 @@ private:
     Box bounding_box;
 
     /// Check if a point in a box
-    bool pointInBox(int x, int y, int z, const PlacedBoxList::iterator& box);
+    bool pointInBox(double x, double y, double z, const PlacedBoxList::iterator& box);
 };
 
 #endif // SOLUTION_H

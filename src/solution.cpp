@@ -1,8 +1,11 @@
 #include "solution.h"
 
 #include <algorithm>
+#include <cstdio>
 
 using namespace std;
+
+const double Eps = 1e-3;
 
 Box Solution::GetBoundingBox()
 {
@@ -27,29 +30,27 @@ int Solution::GetBoxesVolume()
 
 bool Solution::Check()
 {
-    // FIXME TODO this function is wrong when boxes are contained
-    // FIXME if more efficient method exists
     for (auto box1 = boxes.begin(); box1 != boxes.end(); ++box1)
         for (auto box2 = boxes.begin(); box2 != boxes.end(); ++box2)
         {
             if (box1 == box2) continue;
-            if (pointInBox(box1->x,  box1->y,  box1->z,  box2)) return 0;
-            if (pointInBox(box1->x,  box1->y,  box1->z2, box2)) return 0;
-            if (pointInBox(box1->x,  box1->y2, box1->z,  box2)) return 0;
-            if (pointInBox(box1->x,  box1->y2, box1->z2, box2)) return 0;
-            if (pointInBox(box1->x2, box1->y,  box1->z,  box2)) return 0;
-            if (pointInBox(box1->x2, box1->y,  box1->z2, box2)) return 0;
-            if (pointInBox(box1->x2, box1->y2, box1->z,  box2)) return 0;
-            if (pointInBox(box1->x2, box1->y2, box1->z2, box2)) return 0;
+            if (pointInBox(box1->x + Eps,  box1->y + Eps,  box1->z + Eps,  box2)) return 0;
+            if (pointInBox(box1->x + Eps,  box1->y + Eps,  box1->z2 - Eps, box2)) return 0;
+            if (pointInBox(box1->x + Eps,  box1->y2 - Eps, box1->z + Eps,  box2)) return 0;
+            if (pointInBox(box1->x + Eps,  box1->y2 - Eps, box1->z2 - Eps, box2)) return 0;
+            if (pointInBox(box1->x2 - Eps, box1->y + Eps,  box1->z + Eps,  box2)) return 0;
+            if (pointInBox(box1->x2 - Eps, box1->y + Eps,  box1->z2 - Eps, box2)) return 0;
+            if (pointInBox(box1->x2 - Eps, box1->y2 - Eps, box1->z + Eps,  box2)) return 0;
+            if (pointInBox(box1->x2 - Eps, box1->y2 - Eps, box1->z2 - Eps, box2)) return 0;
         }
     return 1;
 }
 
-bool Solution::pointInBox(int x, int y, int z, const PlacedBoxList::iterator& box)
+bool Solution::pointInBox(double x, double y, double z, const PlacedBoxList::iterator& box)
 {
-    return x > box->x && x < box->x2 &&
-           y > box->y && y < box->y2 &&
-           z > box->z && z < box->z2;
+    return x > (double)box->x && x < (double)box->x2 &&
+           y > (double)box->y && y < (double)box->y2 &&
+           z > (double)box->z && z < (double)box->z2;
 }
 
 Solution Solution::LoadSolutionFromFile(const string& fileName)
