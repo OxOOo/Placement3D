@@ -37,7 +37,7 @@
 \section{系统构成}
 	下面是程序中所用的类之间的关系：
 	\begin{figure}[H]
-		\centering\includegraphics[width=14cm]{figure/p1.png}
+		\centering\includegraphics[width=14cm]{figure/p2.png}
 	\end{figure}
 
 \subsection{Box}
@@ -67,38 +67,7 @@
 \section{测试}
 	下面是测试过程，环境为~Linux(Ubuntu 16.04)。
 
-	进入目录~\texttt{MST/}，在命令行里运行~\texttt{./test.sh}，可进行测试。测试首先会构建所有文件，然后在~\texttt{testcase/}~ 目录随机生成测试数据(默认~5~组，点数分别为~2000,4000,6000,8000,1000)，并对每个测试数据进行测试，分别给出使用~Delaunay~三角剖分与暴力两种方法的计算结果与运行时间。
-
-\section{测试结果}
-	对于随机生成的~5~组测试数据，两种方法的结果完全相同，但运行时间相差很大。下表给出了这~5~组测试数据的运行时间(坐标范围~$[0,1~000~000]$)：
-\begin{center}
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		点数		& 运行结果		& \texttt{fastMST()}~用时(s)& \texttt{naiveMST()}~用时(s)	\\ \hline
-		2~000	& 29523287.873	& 0.010						& 0.629								\\ \hline
-		4~000	& 41269900.360	& 0.021						& 3.285								\\ \hline
-		6~000	& 50283650.356	& 0.034						& 9.200								\\ \hline
-		8~000	& 57948829.865	& 0.038						& 17.538							\\ \hline
-		10~000	& 65027544.650	& 0.050						& 31.311							\\ \hline
-	\end{tabular}
-\end{center}
-对于更多的点，只使用~\texttt{fastMST()}~进行测试，结果如下(坐标范围~$[0,1~000~000]$)：
-\begin{center}
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		点数			& 生成的边数		& 运行结果		& 运行时间(s)	\\ \hline
-		50~000		& 149968 		& 145005705.745	& 0.564					\\ \hline
-		200~000		& 599962		& 289631284.054	& 7.458					\\ \hline
-		400~000		& 1199961		& 409905447.622	& 25.253				\\ \hline
-		600~000		& 1799962		& 501503861.882	& 48.262				\\ \hline
-		800~000		& 2399964		& 579267419.747	& 83.175				\\ \hline		
-		1~000~000	& 2999959		& 647674562.982	& 124.749				\\ \hline
-
-	\end{tabular}
-\end{center}
 	
-	可以看出，生成的边数大约在点数的~3~倍左右。随着点数的增多，算法的运行时间也在不断增加。算法的常数也非常大，虽然效率是~$O(n\log n)$~的，但是也只能够较快地处理十万级别的点数，对于百万级别的点数还是需要很长时间的。
-
 
 \section{演示程序}
 	为了让数据可视化，我们还用~OpenGL~写了一个~demo，能够实现对问题解的三维显示。
@@ -123,7 +92,7 @@
 	等待几秒后，便会给出求得的放置方案的三维显示，并可随意拖动、缩放：
 	
 	\begin{figure}[H]
-		\centering\includegraphics[width=11cm]{figure/p2.png}
+		\centering\includegraphics[width=11cm]{figure/p3.png}
 	\end{figure}
 	
 	该解会被保存到~\texttt{sol.txt}~中，并且终端会输出如下信息：
@@ -136,8 +105,7 @@
 		\texttt{Wasted volume ratio: 0.000\%} 
 	}}
 	
-	
-\section{参考资料}
+\section{参考文献}
 	\begin{itemize}
 		\item [1] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2004. Temporal floorplanning using the T-tree formu-lation. In Proceedings of International Conference on Computer-Aided Design. 300–305.
 		\item [2] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2007. Placement of Defect-Tolerant Digital Microfluidic Biochips Using the T-tree Formulation. ACM Journal on Emerging Technologies in Computing Systems, Vol. 3, No. 3, Article 13.
