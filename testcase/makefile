@@ -33,8 +33,16 @@ debug: $(OBJDIR)/debug.o
 	@echo "Now Generating $< ..."
 	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
 
+boxesmaker: $(OBJDIR)/boxesmaker.o
+	@echo "Now Generating $< ..."
+	g++ -I$(INCLUDE) -L$(LD_LIBRARY) $^ -o $@ $(CXXFLAGS) $(LIB)
+
 run-debug:
 	./debug
+
+run-boxesmaker:
+	boxesmaker.exe
+
 
 $(OBJDIR):
 	$(MKDIR) $(OBJDIR)

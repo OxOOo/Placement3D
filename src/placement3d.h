@@ -17,6 +17,12 @@ public:
         return sol;
     }
 
+    /// Save a Solution
+    void SaveSolutionToFile(const std::string& fileName)
+    {
+        sol.SaveToFile(fileName);
+    }
+
     /// Set if debug
     void SetDebug() { is_debug = true; }
 
