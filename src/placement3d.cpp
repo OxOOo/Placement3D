@@ -81,6 +81,8 @@ void Placement3D::solve()
             } else {
                 delete newTree;
             }
+			else
+				delete newTree;
         }
 
         if (is_debug)

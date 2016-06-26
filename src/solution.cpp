@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <iostream>
 
 using namespace std;
 
@@ -24,7 +25,7 @@ Box Solution::GetBoundingBox()
 int Solution::GetBoxesVolume()
 {
     if (total_vol) return total_vol;
-    for (auto box : boxes) total_vol += box.Volume();
+    for (auto box : boxes) total_vol += box.Volume(), cout<<total_vol<<' '<<box.l<<' '<<box.w<<' '<<box.h<<endl;
     return total_vol;
 }
 

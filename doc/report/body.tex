@@ -5,7 +5,8 @@
 	使用论文~[1]~中的算法，把箱子的放置方案与一棵~T-tree~对应，然后使用模拟退火算法对~T-tree~进行调整，求出最小包围长方体的体积。
 	
 \subsection{T-tree}
-	
+	TTree是一颗三叉树，每一种3维箱子的放置方案，都对应一颗TTree。在TTree中如果B是A的左儿子，表示B在A箱子的上面，中儿子表示B在A 箱子的左边,右儿子表示B在A箱子的右边。对于一颗TTree，我们可以通过一种方式，将它分解成若干二叉树，从而构造出该TTree对应的3维箱子的放置方案
+
 
 \subsection{模拟退火}
 	现在，一棵~T-tree~对应了唯一一种放置方案。下面使用模拟退火算法，对~T-tree~进行调整，以求出最小包围长方体的体积。
@@ -30,15 +31,15 @@
 		\[\left\{
 		\begin{array}{ll}
 			1, & \hbox{$\Phi' < \Phi$} \\
-			e^{-\frac{\Phi' - \Phi}{T}}, & \hbox{$\Phi' >= \Phi$}
+			e^{-\frac{\Phi' - \Phi}{T}}, & \hbox{$\Phi' \ge \Phi$}
 		\end{array}
 		\right.\]
 
 \section{系统构成}
 	下面是程序中所用的类之间的关系：
-	\begin{figure}[H]
-		\centering\includegraphics[width=14cm]{figure/p2.png}
-	\end{figure}
+%	\begin{figure}[H]
+%		\centering\includegraphics[width=14cm]{figure/p2.png}
+%	\end{figure}
 
 \subsection{Box}
 	箱子类，包含成员变量~\texttt{l}，\texttt{w}，\texttt{h}(长、宽、高)，以及计算体积的成员函数~\texttt{Volume()}，还有用于打开、保存箱子数据的静态成员函数。箱子的列表~\texttt{vector<Box>}~定义为~BoxList~类型。
@@ -47,13 +48,13 @@
 	放好的箱子类，继承于~Box，比基类多了~\texttt{x}，\texttt{y}，\texttt{z}，\texttt{x2}，\texttt{y2}，\texttt{z2}~成员变量，分别表示放好的箱子所构成的区域~xyz~坐标的最小值与最大值。放好的箱子的列表~\texttt{vector<Placement3D>}~定义为~PlacedBoxList~类型。
 
 \subsection{Solution}
-	问题的解构成的类，包含一个~\texttt{PlacedBoxList}~类型成员变量~\texttt{boxes}，还有用于检验解打得合法性的成员函数~\texttt{Check()}，求包围所有箱子长方体的体积的成员函数~\texttt{GetBoundingBoxVolume()}，计算浪费的空间所占的比例的成员函数~\texttt{GetWastedVolumeRatio()}~等。
+	问题的解构成的类，包含一个~PlacedBoxList~类型成员变量~\texttt{boxes}，还有用于检验解打得合法性的成员函数~\texttt{Check()}，求包围所有箱子长方体的体积的成员函数~\texttt{GetBoundingBoxVolume()}，计算浪费的空间所占的比例的成员函数~\texttt{GetWastedVolumeRatio()}~等。
 
 \subsection{Placement3D}
-	类~Placement3D~为求解该类问题提供一个接口，使用~BoxList~构造，其中~solve()~函数使用模拟退火调整~T-tree，\texttt{GetSolution()}~函数返回求得的解。剩下一些成员函数用于设置在模拟退火中的参数。
+	类~Placement3D~为求解该类问题提供一个接口，使用~BoxList~构造，其中~\texttt{solve()}~函数使用模拟退火调整~T-tree，\texttt{GetSolution()}~函数返回求得的解。剩下一些成员函数用于设置在模拟退火中的参数。
 	
 \subsection{TTree}
-	类~TTree~实现了在参考文献中描述的~T-tree~的一个框架，用于实现模拟退火调整过程中对~T-tree~的各种操作，即~\textt{Move()}，\textt{Swap()}~和~\textt{Rotate()}。其中也实现了若干对~T-tree~插入、删除的函数。
+	类~TTree~实现了在参考文献中描述的~T-tree~的一个框架，用于实现模拟退火调整过程中对~T-tree~的各种操作，即~\texttt{Move()}，\texttt{Swap()}~和~\texttt{Rotate()}。其中也实现了若干对~T-tree~插入、删除的函数。
 	
 	TTree~主要使用一个~BoxList~构造，构造的结果是随机产生一棵合法的~T-tree。此外还有一个复制构造函数，实现了深层复制，用于在模拟退火中初始化相邻解。
 	
@@ -67,12 +68,23 @@
 \section{测试}
 	下面是测试过程，环境为~Linux(Ubuntu 16.04)。
 
-	
+	\begin{center}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		编号		& 箱子数		& 用时(s)	& 总体积	& 浪费率 \\ \hline
+		2~000	& 29523287.873	& 0.010			&			& 0.629	\\ \hline
+		4~000	& 41269900.360	& 0.021			&			& 3.285		\\ \hline
+		6~000	& 50283650.356	& 0.034						& 9.200			\\ \hline
+		8~000	& 57948829.865	& 0.038						& 17.538							\\ \hline
+		10~000	& 65027544.650	& 0.050						& 31.311							\\ \hline
+	\end{tabular}
+\end{center}
 
 \section{演示程序}
 	为了让数据可视化，我们还用~OpenGL~写了一个~demo，能够实现对问题解的三维显示。
 	
 	例如，对于论文中的样例，有六个箱子，相应数据存储为~\texttt{box.txt}：
+
 	\framebox[13.2cm][l]{\small\shortstack[l]{
 		\texttt{6} \\ \\
 		\texttt{2 3 4} \\ \\
@@ -82,32 +94,34 @@
 		\texttt{6 3 5} \\ \\
 		\texttt{5 1 6}
 	}}
-	
-	在终端输入
+
+在终端输入
+
 	\framebox[13.2cm][l]{\small\shortstack[l]{
 		\texttt{make} \\ \\
-		\texttt{make run DEMO_ARGS="-p box.txt -o sol.txt"}
+		\texttt{make run DEMO\_ARGS="-p box.txt -o sol.txt"}
 	}}
+
+等待几秒后，便会给出求得的放置方案的三维显示，并可随意拖动、缩放：
 	
-	等待几秒后，便会给出求得的放置方案的三维显示，并可随意拖动、缩放：
-	
-	\begin{figure}[H]
-		\centering\includegraphics[width=11cm]{figure/p3.png}
-	\end{figure}
+%	\begin{figure}[H]
+%		\centering\includegraphics[width=11cm]{figure/p3.png}
+%	\end{figure}
 	
 	该解会被保存到~\texttt{sol.txt}~中，并且终端会输出如下信息：
+
 	\framebox[13.2cm][l]{\small\shortstack[l]{
 		\texttt{Checking validity: OK} \\ \\
 		\texttt{Total number of boxes: 6} \\ \\
 		\texttt{Total volume of boxes: 180} \\ \\
 		\texttt{Volume of bounding box: 180} \\ \\
 		\texttt{Wasted volume: 0} \\ \\
-		\texttt{Wasted volume ratio: 0.000\%} 
+		\texttt{Wasted volume ratio: 0.000\%}
 	}}
 	
 \section{参考文献}
 	\begin{itemize}
-		\item [1] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2004. Temporal floorplanning using the T-tree formu-lation. In Proceedings of International Conference on Computer-Aided Design. 300–305.
-		\item [2] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2007. Placement of Defect-Tolerant Digital Microfluidic Biochips Using the T-tree Formulation. ACM Journal on Emerging Technologies in Computing Systems, Vol. 3, No. 3, Article 13.
-		\item [3] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2009. T-Trees: A Tree-Based Representation for Temporal and Three-Dimensional Floorplanning. ACM Transactions on Design Automation of Electronic Systems, Vol. 14, No. 4, Article 51.
+		\item $[1]$ Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2004. Temporal floorplanning using the T-tree formu-lation. In Proceedings of International Conference on Computer-Aided Design. 300–305.
+		\item $[2]$ Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2007. Placement of Defect-Tolerant Digital Microfluidic Biochips Using the T-tree Formulation. ACM Journal on Emerging Technologies in Computing Systems, Vol. 3, No. 3, Article 13.
+		\item $[3]$ Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2009. T-Trees: A Tree-Based Representation for Temporal and Three-Dimensional Floorplanning. ACM Transactions on Design Automation of Electronic Systems, Vol. 14, No. 4, Article 51.
 	\end{itemize}
