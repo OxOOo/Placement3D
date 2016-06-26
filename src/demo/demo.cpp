@@ -284,7 +284,6 @@ int init(int argc, char* argv[])
         BoxList boxes = Box::LoadBoxesFromFile(inFile);
 
         Placement3D* p3d = new Placement3D(boxes);
-		p3d->SetDebug();
         solution = p3d->GetSolution();
         delete p3d;
 

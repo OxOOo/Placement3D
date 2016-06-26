@@ -5,8 +5,10 @@
 	使用论文~[1]~中的算法，把箱子的放置方案与一棵~T-tree~对应，然后使用模拟退火算法对~T-tree~进行调整，求出最小包围长方体的体积。
 	
 \subsection{T-tree}
-	TTree是一颗三叉树，每一种3维箱子的放置方案，都对应一颗TTree。在TTree中如果B是A的左儿子，表示B在A箱子的上面，中儿子表示B在A 箱子的左边,右儿子表示B在A箱子的右边。对于一颗TTree，我们可以通过一种方式，将它分解成若干二叉树，从而构造出该TTree对应的3维箱子的放置方案
-
+	TTree是一颗三叉树，每一种~3~维箱子的放置方案，都对应一棵~T-tree。在~T-tree~中如果~B~是~A~的左儿子，表示~B~在~A~箱子的上面，中儿子表示~B~在~A~箱子的左边，右儿子表示~B~在~A~箱子的右边。对于一棵~T-tree，我们可以通过一种方式，将它分解成若干二叉树，从而构造出该~T-tree~对应的~3~维箱子的放置方案。
+	\begin{figure}[H]
+		\centering\includegraphics[width=10cm]{figure/p1.png}
+	\end{figure}
 
 \subsection{模拟退火}
 	现在，一棵~T-tree~对应了唯一一种放置方案。下面使用模拟退火算法，对~T-tree~进行调整，以求出最小包围长方体的体积。
@@ -37,9 +39,9 @@
 
 \section{系统构成}
 	下面是程序中所用的类之间的关系：
-%	\begin{figure}[H]
-%		\centering\includegraphics[width=14cm]{figure/p2.png}
-%	\end{figure}
+	\begin{figure}[H]
+		\centering\includegraphics[width=15cm]{figure/p2.png}
+	\end{figure}
 
 \subsection{Box}
 	箱子类，包含成员变量~\texttt{l}，\texttt{w}，\texttt{h}(长、宽、高)，以及计算体积的成员函数~\texttt{Volume()}，还有用于打开、保存箱子数据的静态成员函数。箱子的列表~\texttt{vector<Box>}~定义为~BoxList~类型。
@@ -66,17 +68,22 @@
 	在~\texttt{GetSolution()}~中，会调用该类的成员函数~\texttt{treePacking()}~去对该~T-tree~进行放置，放置过程中调用~\texttt{treeDecomposition()}~把~T-tree~分解成二叉树与若干和这个二叉树相邻的节点，然后调用~\texttt{binaryTreePacking()}~对二叉树的每个节点进行放置。\texttt{placeModule()}~则是对单独的一个点进行放置。
 	
 \section{测试}
-	下面是测试过程，环境为~Linux(Ubuntu 16.04)。
+	下面是测试结果，环境为~Linux(Ubuntu 16.04)。
 
-	\begin{center}
+\begin{center}
 	\begin{tabular}{|c|c|c|c|c|}
 		\hline
-		编号		& 箱子数		& 用时(s)	& 总体积	& 浪费率 \\ \hline
-		2~000	& 29523287.873	& 0.010			&			& 0.629	\\ \hline
-		4~000	& 41269900.360	& 0.021			&			& 3.285		\\ \hline
-		6~000	& 50283650.356	& 0.034						& 9.200			\\ \hline
-		8~000	& 57948829.865	& 0.038						& 17.538							\\ \hline
-		10~000	& 65027544.650	& 0.050						& 31.311							\\ \hline
+		编号		& 箱子数  & 用时(s)	& 总箱子体积	& 浪费率 \\ \hline
+		1	     & 2	  & 0.1	    & 380	    & 13.636\%	\\ \hline
+		2	     & 5	  & 1.5		& 678		& 16.296\%	\\ \hline
+		3	     & 8	  & 7.1		& 999		& 14.615\%	\\ \hline
+		4	     & 10     & 13		& 1311		& 12.600\%	\\ \hline
+		5	     & 15	  & 47		& 2976		& 9.818\%	\\ \hline
+		6	     & 18	  & 93		& 1859		& 13.935\%	\\ \hline
+		7	     & 20	  & 135		& 2866		& 14.702\%	\\ \hline
+		8	     & 25	  & 235		& 5215		& 11.610\%	\\ \hline
+		9	     & 28	  & 328		& 4201		& 6.644\%	\\ \hline
+		10	     & 30	  & 413		& 4808		& 4.603\%	\\ \hline
 	\end{tabular}
 \end{center}
 
@@ -104,9 +111,9 @@
 
 等待几秒后，便会给出求得的放置方案的三维显示，并可随意拖动、缩放：
 	
-%	\begin{figure}[H]
-%		\centering\includegraphics[width=11cm]{figure/p3.png}
-%	\end{figure}
+	\begin{figure}[H]
+		\centering\includegraphics[width=13cm]{figure/p3.png}
+	\end{figure}
 	
 	该解会被保存到~\texttt{sol.txt}~中，并且终端会输出如下信息：
 
