@@ -1,4 +1,5 @@
 #include <cmath>
+#include <ctime>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -276,7 +277,8 @@ int init(int argc, char* argv[])
                "  -o <file>       Save the placement solution into <file> (with -p option)\n", argv[0]);
         return 1;
     }
-
+    
+	srand(time(0));
     if (_p)
     {
         BoxList boxes = Box::LoadBoxesFromFile(inFile);

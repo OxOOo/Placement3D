@@ -1,0 +1,145 @@
+\section{问题描述}
+	给出~$n$~个长方体的箱子(长、宽、高)，箱子可以随意放置或旋转(棱与坐标轴平行)，但不能有重叠，求能包围所有箱子的长方体的最小体积。
+
+\section{算法简介}
+	使用论文~[1]~中的算法，把箱子的放置方案与一棵~T-tree~对应，然后使用模拟退火算法对~T-tree~进行调整，求出最小包围长方体的体积。
+	
+\subsection{T-tree}
+	
+
+\subsection{模拟退火}
+	现在，一棵~T-tree~对应了唯一一种放置方案。下面使用模拟退火算法，对~T-tree~进行调整，以求出最小包围长方体的体积。
+	
+	首先随机生成一棵~T-tree，然后在模拟退火中调整该树，以产生相邻解。调整的方法主要有~3~种：
+	\begin{itemize}
+		\item Move：把一个箱子移到另一处；
+		\item Swap：交换两个箱子；
+		\item Rotate：旋转一个箱子。
+	\end{itemize}
+这些调整方法在~T-tree~中对应的操作为：
+	\begin{itemize}
+		\item Move：删掉一个结点，插入一个新地方；
+		\item Swap：交换两个节点所代表的箱子；
+		\item Rotate：交换该节点箱子的长、宽、高。
+	\end{itemize}
+由于在模拟退火中是随机产生相邻解，所以要删的点、插入的位置、要交换的点都是随机的。
+
+	在模拟退火中，一个可行解的价值
+		\[\Phi = \alpha V\]
+其中~$V$~是该解对应的放置方案的最小包围长方体的体积。对于相邻解，设其价值为~$\Phi'$，当前温度为~$T$，则接受该解的概率为
+		\[\left\{
+		\begin{array}{ll}
+			1, & \hbox{$\Phi' < \Phi$} \\
+			e^{-\frac{\Phi' - \Phi}{T}}, & \hbox{$\Phi' >= \Phi$}
+		\end{array}
+		\right.\]
+
+\section{系统构成}
+	下面是程序中所用的类之间的关系：
+	\begin{figure}[H]
+		\centering\includegraphics[width=14cm]{figure/p1.png}
+	\end{figure}
+
+\subsection{Box}
+	箱子类，包含成员变量~\texttt{l}，\texttt{w}，\texttt{h}(长、宽、高)，以及计算体积的成员函数~\texttt{Volume()}，还有用于打开、保存箱子数据的静态成员函数。箱子的列表~\texttt{vector<Box>}~定义为~BoxList~类型。
+
+\subsection{PlacedBox}
+	放好的箱子类，继承于~Box，比基类多了~\texttt{x}，\texttt{y}，\texttt{z}，\texttt{x2}，\texttt{y2}，\texttt{z2}~成员变量，分别表示放好的箱子所构成的区域~xyz~坐标的最小值与最大值。放好的箱子的列表~\texttt{vector<Placement3D>}~定义为~PlacedBoxList~类型。
+
+\subsection{Solution}
+	问题的解构成的类，包含一个~\texttt{PlacedBoxList}~类型成员变量~\texttt{boxes}，还有用于检验解打得合法性的成员函数~\texttt{Check()}，求包围所有箱子长方体的体积的成员函数~\texttt{GetBoundingBoxVolume()}，计算浪费的空间所占的比例的成员函数~\texttt{GetWastedVolumeRatio()}~等。
+
+\subsection{Placement3D}
+	类~Placement3D~为求解该类问题提供一个接口，使用~BoxList~构造，其中~solve()~函数使用模拟退火调整~T-tree，\texttt{GetSolution()}~函数返回求得的解。剩下一些成员函数用于设置在模拟退火中的参数。
+	
+\subsection{TTree}
+	类~TTree~实现了在参考文献中描述的~T-tree~的一个框架，用于实现模拟退火调整过程中对~T-tree~的各种操作，即~\textt{Move()}，\textt{Swap()}~和~\textt{Rotate()}。其中也实现了若干对~T-tree~插入、删除的函数。
+	
+	TTree~主要使用一个~BoxList~构造，构造的结果是随机产生一棵合法的~T-tree。此外还有一个复制构造函数，实现了深层复制，用于在模拟退火中初始化相邻解。
+	
+	TTree~还包含一个纯虚函数~\texttt{GetSolution()}，用于求解该~T-tree~表示的放置方案。由于论文~[3]~中提到对于一种放置方案，可以构造多种含义不同的~T-tree，因此该函数设计为纯虚函数，由~TTree~类派生的不同含义的~T-tree~类去实现。
+	
+\subsection{BTTree}
+	该类是~TTree~的一种实现，即实现了成员函数~\texttt{GetSolution()}。由于计算方案时要把原来三叉的~T-tree~转化为若干棵二叉树，所以称其为``Binary T-ree''，也就是~BTTree~类。
+	
+	在~\texttt{GetSolution()}~中，会调用该类的成员函数~\texttt{treePacking()}~去对该~T-tree~进行放置，放置过程中调用~\texttt{treeDecomposition()}~把~T-tree~分解成二叉树与若干和这个二叉树相邻的节点，然后调用~\texttt{binaryTreePacking()}~对二叉树的每个节点进行放置。\texttt{placeModule()}~则是对单独的一个点进行放置。
+	
+\section{测试}
+	下面是测试过程，环境为~Linux(Ubuntu 16.04)。
+
+	进入目录~\texttt{MST/}，在命令行里运行~\texttt{./test.sh}，可进行测试。测试首先会构建所有文件，然后在~\texttt{testcase/}~ 目录随机生成测试数据(默认~5~组，点数分别为~2000,4000,6000,8000,1000)，并对每个测试数据进行测试，分别给出使用~Delaunay~三角剖分与暴力两种方法的计算结果与运行时间。
+
+\section{测试结果}
+	对于随机生成的~5~组测试数据，两种方法的结果完全相同，但运行时间相差很大。下表给出了这~5~组测试数据的运行时间(坐标范围~$[0,1~000~000]$)：
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		点数		& 运行结果		& \texttt{fastMST()}~用时(s)& \texttt{naiveMST()}~用时(s)	\\ \hline
+		2~000	& 29523287.873	& 0.010						& 0.629								\\ \hline
+		4~000	& 41269900.360	& 0.021						& 3.285								\\ \hline
+		6~000	& 50283650.356	& 0.034						& 9.200								\\ \hline
+		8~000	& 57948829.865	& 0.038						& 17.538							\\ \hline
+		10~000	& 65027544.650	& 0.050						& 31.311							\\ \hline
+	\end{tabular}
+\end{center}
+对于更多的点，只使用~\texttt{fastMST()}~进行测试，结果如下(坐标范围~$[0,1~000~000]$)：
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		点数			& 生成的边数		& 运行结果		& 运行时间(s)	\\ \hline
+		50~000		& 149968 		& 145005705.745	& 0.564					\\ \hline
+		200~000		& 599962		& 289631284.054	& 7.458					\\ \hline
+		400~000		& 1199961		& 409905447.622	& 25.253				\\ \hline
+		600~000		& 1799962		& 501503861.882	& 48.262				\\ \hline
+		800~000		& 2399964		& 579267419.747	& 83.175				\\ \hline		
+		1~000~000	& 2999959		& 647674562.982	& 124.749				\\ \hline
+
+	\end{tabular}
+\end{center}
+	
+	可以看出，生成的边数大约在点数的~3~倍左右。随着点数的增多，算法的运行时间也在不断增加。算法的常数也非常大，虽然效率是~$O(n\log n)$~的，但是也只能够较快地处理十万级别的点数，对于百万级别的点数还是需要很长时间的。
+
+
+\section{演示程序}
+	为了让数据可视化，我们还用~OpenGL~写了一个~demo，能够实现对问题解的三维显示。
+	
+	例如，对于论文中的样例，有六个箱子，相应数据存储为~\texttt{box.txt}：
+	\framebox[13.2cm][l]{\small\shortstack[l]{
+		\texttt{6} \\ \\
+		\texttt{2 3 4} \\ \\
+		\texttt{2 3 2} \\ \\
+		\texttt{2 2 4} \\ \\
+		\texttt{2 2 2} \\ \\
+		\texttt{6 3 5} \\ \\
+		\texttt{5 1 6}
+	}}
+	
+	在终端输入
+	\framebox[13.2cm][l]{\small\shortstack[l]{
+		\texttt{make} \\ \\
+		\texttt{make run DEMO_ARGS="-p box.txt -o sol.txt"}
+	}}
+	
+	等待几秒后，便会给出求得的放置方案的三维显示，并可随意拖动、缩放：
+	
+	\begin{figure}[H]
+		\centering\includegraphics[width=11cm]{figure/p2.png}
+	\end{figure}
+	
+	该解会被保存到~\texttt{sol.txt}~中，并且终端会输出如下信息：
+	\framebox[13.2cm][l]{\small\shortstack[l]{
+		\texttt{Checking validity: OK} \\ \\
+		\texttt{Total number of boxes: 6} \\ \\
+		\texttt{Total volume of boxes: 180} \\ \\
+		\texttt{Volume of bounding box: 180} \\ \\
+		\texttt{Wasted volume: 0} \\ \\
+		\texttt{Wasted volume ratio: 0.000\%} 
+	}}
+	
+	
+\section{参考资料}
+	\begin{itemize}
+		\item [1] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2004. Temporal floorplanning using the T-tree formu-lation. In Proceedings of International Conference on Computer-Aided Design. 300–305.
+		\item [2] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2007. Placement of Defect-Tolerant Digital Microfluidic Biochips Using the T-tree Formulation. ACM Journal on Emerging Technologies in Computing Systems, Vol. 3, No. 3, Article 13.
+		\item [3] Yuh, P.-H., Yang, C.-L., and Chang, Y.-W. 2009. T-Trees: A Tree-Based Representation for Temporal and Three-Dimensional Floorplanning. ACM Transactions on Design Automation of Electronic Systems, Vol. 14, No. 4, Article 51.
+	\end{itemize}
