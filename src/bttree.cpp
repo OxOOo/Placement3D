@@ -87,7 +87,7 @@ void BTTree::placeModule(TTreeNode* n, vector<TTreeNode*> &L)
         L.push_back(n);
         return;
     }
-    if (n->fa->b_l == n) {
+    if (n->fa->l == n) {
         n->box.z = n->fa->box.z + n->fa->box.h;
     } else {
         n->box.z = n->fa->box.z;

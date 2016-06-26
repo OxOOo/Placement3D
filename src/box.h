@@ -3,11 +3,17 @@
 
 #include "box.h"
 
+#include <string>
 #include <vector>
 
+class Box;
+typedef std::vector<Box> BoxList;
 class Box
 {
 public:
+    static BoxList LoadBoxesFromFile(const std::string& fileName);
+    static void SaveBoxesToFile(const std::string& fileName, const BoxList& boxes);
+
     Box() : l(0), w(0), h(0) {}
     Box(const Box& box) : l(box.l), w(box.w), h(box.h) {}
     Box(int l, int w, int h) : l(l), w(w), h(h) {}
@@ -17,7 +23,6 @@ public:
 
     int Volume() { return l * w * h; }
 };
-typedef std::vector<Box> BoxList;
 
 
 class PlacedBox: public Box

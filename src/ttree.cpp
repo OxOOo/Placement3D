@@ -88,32 +88,38 @@ void TTree::deleteBox(int p)
     deleteNode(now);
 }
 
-void TTree::deleteNode(TTreeNode* nodep)
+void TTree::deleteNode(TTreeNode* node)
 {
+    if (node == NULL) return;
     TTreeNode* tmp;
-    int soncnt = 0;
-    if (nodep->l != NULL) ++soncnt;
-    if (nodep->m != NULL) ++soncnt;
-    if (nodep->r != NULL) ++soncnt;
-    if (soncnt)
+    if (!node->IsLeaf())
     {
         bool flag = 1;
         while (flag)
         {
             SonType i = (SonType)Random::nextInt(3);
-            if (i == Left  && nodep->l != NULL) tmp = nodep->l ,flag = 0;
-            if (i == Mid   && nodep->m != NULL) tmp = nodep->m ,flag = 0;
-            if (i == Right && nodep->r != NULL) tmp = nodep->r ,flag = 0;
+            if (i == Left  && node->l != NULL) tmp = node->l, flag = 0;
+            if (i == Mid   && node->m != NULL) tmp = node->m, flag = 0;
+            if (i == Right && node->r != NULL) tmp = node->r, flag = 0;
         }
+        deleteNode(tmp);
+        TTreeNode::CopyWithoutBox(tmp, node);
+        if (tmp->l != NULL) tmp->l->fa = tmp;
+        if (tmp->m != NULL) tmp->m->fa = tmp;
+        if (tmp->r != NULL) tmp->r->fa = tmp;
     }
     else
         tmp = NULL;
-    deleteNode(tmp);
-    TTreeNode::Copy(tmp, nodep);
-    if (nodep->fa->l == nodep) nodep->fa->l = tmp;
-    if (nodep->fa->m == nodep) nodep->fa->m = tmp;
-    if (nodep->fa->r == nodep) nodep->fa->r = tmp;
-    nodep->fa = nodep->l = nodep->m = nodep->r = NULL;
+
+    if (node->IsRoot())
+        root = tmp;
+    else
+    {
+        if (node->fa->l == node) node->fa->l = tmp;
+        if (node->fa->m == node) node->fa->m = tmp;
+        if (node->fa->r == node) node->fa->r = tmp;
+    }
+    node->fa = node->l = node->m = node->r = NULL;
 }
 
 void TTree::insertAsChild(int p, int q)
@@ -126,25 +132,35 @@ void TTree::insertAsChild(int p, int q)
         return ;
     }
     nodep->fa = nodeq;
-    SonType i = (SonType)Random::nextInt(3);
-    if (i == Left)
+
+    SonType k = (SonType)Random::nextInt(3);
+    if (k == Left)
         nodeq->l = nodep;
-    if (i == Mid)
+    if (k == Mid)
         nodeq->m = nodep;
-    if (i == Right)
+    if (k == Right)
         nodeq->r = nodep;
 }
 
-void TTree::insertToReplace(int p, int q, SonType k)
+void TTree::insertToReplace(int p, int q)
 {
     TTreeNode* nodep = getNodeById(p);
     TTreeNode* nodeq = getNodeById(q);
-    if (nodeq->fa->l == nodeq)
-        nodeq->fa->l = nodep, nodep->fa = nodeq->fa, nodeq->fa = nodep;
-    if (nodeq->fa->m == nodeq)
-        nodeq->fa->m = nodep, nodep->fa = nodeq->fa, nodeq->fa = nodep;
-    if (nodeq->fa->r == nodeq)
-        nodeq->fa->r = nodep, nodep->fa = nodeq->fa, nodeq->fa = nodep;
+
+    if (nodeq->IsRoot())
+        root = nodep, nodep->fa = NULL, nodeq->fa = nodep;
+    else
+    {
+        if (nodeq->fa->l == nodeq)
+            nodeq->fa->l = nodep;
+        else if (nodeq->fa->m == nodeq)
+            nodeq->fa->m = nodep;
+        else if (nodeq->fa->r == nodeq)
+            nodeq->fa->r = nodep;
+        nodep->fa = nodeq->fa, nodeq->fa = nodep;
+    }
+
+    SonType k = (SonType)Random::nextInt(3);
     if (k == Left)
         nodep->l = nodeq;
     if (k == Mid)
@@ -156,14 +172,14 @@ void TTree::insertToReplace(int p, int q, SonType k)
 void TTree::print(TTreeNode* node) const
 {
     if (node == NULL) return;
-    printf("%d \t\t father: %d \t"
-       "left: %d \t middle: %d \t right: %d\n", getIdByNode(node),
-                                                getIdByNode(node->fa),
-                                                getIdByNode(node->l),
-                                                getIdByNode(node->m),
-                                                getIdByNode(node->r));
+    printf("%d \t father: %d \t"
+       "left: %d \t middle: %d \t right: %d \t\t", getIdByNode(node),
+                                                   getIdByNode(node->fa),
+                                                   getIdByNode(node->l),
+                                                   getIdByNode(node->m),
+                                                   getIdByNode(node->r));
 
-    printf("%d %d %d  %d %d %d\n\n", node->box.x, node->box.y, node->box.z,
+    printf("%d %d %d \t %d %d %d\n", node->box.x, node->box.y, node->box.z,
                                      node->box.l, node->box.w, node->box.h);
 
     print(node->l);
@@ -182,9 +198,9 @@ void TTree::Move()
 
     deleteBox(p);
     if (!getNodeById(q)->IsLeaf())
-        insertToReplace(p, q, (SonType)Random::nextInt(3));
+        insertToReplace(p, q);
     else if (Random::nextInt(2))
-        insertToReplace(p, q, (SonType)Random::nextInt(3));
+        insertToReplace(p, q);
     else
         insertAsChild(p, q);
 }
@@ -193,10 +209,7 @@ void TTree::Swap(int p, int q)
 {
     TTreeNode* nownode1 = getNodeById(p);
     TTreeNode* nownode2 = getNodeById(q);
-    swap(nownode1->l, nownode2->l);
-    swap(nownode1->m, nownode2->m);
-    swap(nownode1->r, nownode2->r);
-    swap(nownode1->fa, nownode2->fa);
+    swap(nownode1->box, nownode2->box);
 }
 
 void TTree::Rotate(int p, int dir) // assume that at first it is l w h

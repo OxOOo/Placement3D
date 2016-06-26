@@ -224,8 +224,8 @@ int getArgs(int argc, char* argv[])
                         _s = true;
                     else
                         _p = true;
+                    inFile = argv[++i];
                 }
-                inFile = argv[++i];
             }
         }
         else
@@ -279,16 +279,20 @@ int init(int argc, char* argv[])
 
     if (_p)
     {
-        BoxList boxes = Placement3D::LoadBoxesFromFile(inFile);
+        BoxList boxes = Box::LoadBoxesFromFile(inFile);
 
         Placement3D* p3d = new Placement3D(boxes);
         solution = p3d->GetSolution();
         delete p3d;
 
-        if (outFile) Placement3D::SaveSolutionToFile(outFile, solution);
+        if (outFile) solution.SaveToFile(outFile);
     }
     else
-        solution = Placement3D::LoadSolutionFromFile(inFile);
+        solution = Solution::LoadSolutionFromFile(inFile);
+
+    bool valid = solution.Check();
+    printf("Checking validity: %s\n", valid ? "OK" : "INVALID");
+    if (!valid) puts("WARNING: solution is INVALID");
 
     Box boundingBox = solution.GetBoundingBox();
     printf("Total number of boxes: %d\n", solution.Size());

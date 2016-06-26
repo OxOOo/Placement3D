@@ -3,9 +3,17 @@
 
 #include "box.h"
 
+#include <string>
+
 class Solution
 {
 public:
+    static Solution LoadSolutionFromFile(const std::string& fileName);
+    static void SaveSolutionToFile(const std::string& fileName, const Solution& sol)
+    {
+        sol.SaveToFile(fileName);
+    }
+
     Solution() : vol(0), total_vol(0), bounding_box() {}
 
     int Size() const { return boxes.size(); }
@@ -34,6 +42,9 @@ public:
 
     /// Check if valid
     bool Check();
+
+    /// Save solution to a file, if fileName = "", print on screen
+    void SaveToFile(const std::string& fileName) const;
 
     /// Iterators of boxes
     PlacedBoxList::const_iterator BoxesBegin() const { return boxes.begin(); }

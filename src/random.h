@@ -2,6 +2,7 @@
 #define RANDOM_H
 
 #include <ctime>
+#include <cstdlib>
 
 class Random
 {
@@ -11,7 +12,7 @@ public:
 #ifdef WIN32
     return (rand() << 16) + rand();
 #else
-    return rand();
+    return ::rand();
 #endif
     }
 

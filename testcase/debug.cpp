@@ -1,17 +1,20 @@
-#include "placement3d.h"
-#include "bttree.h"
-
 #include <iostream>
-#include <ctime>
-#include <cstdlib>
+#include <placement3d.h>
 
 using namespace std;
 
-int main(int argc, char* argv[])
+Solution solution;
+
+int main()
 {
-    BoxList temp;
-    BTTree T(temp);
-    T.Debug();
+    BoxList boxes = Box::LoadBoxesFromFile("box.txt");
+
+    Placement3D* p3d = new Placement3D(boxes);
+    solution = p3d->GetSolution();
+    delete p3d;
+
+    cout << "Optimal solution: " << solution.GetBoundingBoxVolume() << endl;
+    Solution::SaveSolutionToFile("box.sol", solution);
 
     return 0;
 }

@@ -18,10 +18,13 @@ public:
     PlacedBox box;
 
     /// Is a leaf node
-    bool IsLeaf() { return l == NULL && m == NULL && r == NULL; }
+    bool IsLeaf() const { return l == NULL && m == NULL && r == NULL; }
 
-    /// Copy q to p except box information
-    static void Copy(TTreeNode *nodep, TTreeNode *nodeq)
+    /// Is the root of T-tree
+    bool IsRoot() const { return fa == NULL; }
+
+    /// Copy q to p without box information
+    static void CopyWithoutBox(TTreeNode *nodep, TTreeNode *nodeq)
     {
         nodep->l = nodeq->l;
         nodep->m = nodeq->m;
@@ -66,7 +69,7 @@ protected:
     TTreeNode* nodes;
 
     /// Recursive to delete the Tree Node p
-    void deleteNode(TTreeNode *nodep);
+    void deleteNode(TTreeNode *node);
 
     /// Delete the box p
     void deleteBox(int p);
@@ -75,7 +78,7 @@ protected:
     void insertAsChild(int p, int q);
 
     /// Insert the box p to box q's place and let box q be the k-th chlid of box p
-    void insertToReplace(int p, int q, SonType k);
+    void insertToReplace(int p, int q);
 
     /// Recursive to print
     void print(TTreeNode* node) const;

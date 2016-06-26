@@ -27,6 +27,7 @@ int Solution::GetBoxesVolume()
 
 bool Solution::Check()
 {
+    // FIXME TODO this function is wrong when boxes are contained
     // FIXME if more efficient method exists
     for (auto box1 = boxes.begin(); box1 != boxes.end(); ++box1)
         for (auto box2 = boxes.begin(); box2 != boxes.end(); ++box2)
@@ -49,4 +50,46 @@ bool Solution::pointInBox(int x, int y, int z, const PlacedBoxList::iterator& bo
     return x > box->x && x < box->x2 &&
            y > box->y && y < box->y2 &&
            z > box->z && z < box->z2;
+}
+
+Solution Solution::LoadSolutionFromFile(const string& fileName)
+{
+    FILE* fin  = fopen(fileName.c_str(), "r");
+    Solution sol;
+    int n;
+
+    if (!fin)
+    {
+        printf("ERROR: NO such file '%s'\n", fileName.c_str());
+        return sol;
+    }
+
+    fscanf(fin, "%d", &n);
+    for (int i = 0; i < n; i++)
+    {
+        int x, y, z, l, w, h;
+        fscanf(fin, "%d%d%d", &x, &y, &z);
+        fscanf(fin, "%d%d%d", &l, &w, &h);
+        sol.Add(x, y, z, l, w, h);
+    }
+    fclose(fin);
+
+    return sol;
+}
+
+void Solution::SaveToFile(const string& fileName) const
+{
+    FILE* fout;
+    if (!fileName.length())
+        fout = stdout;
+    else
+        fout = fopen(fileName.c_str(), "w");
+
+    fprintf(fout, "%d\n", Size());
+    for (auto it = BoxesBegin(); it != BoxesEnd(); ++it)
+    {
+        fprintf(fout, "%d %d %d  ", it->x, it->y, it->z);
+        fprintf(fout, "%d %d %d\n", it->l, it->w, it->h);
+    }
+    if (fout != stdout) fclose(fout);
 }
