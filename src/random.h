@@ -1,7 +1,6 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include <ctime>
 #include <cstdlib>
 
 class Random
@@ -18,7 +17,7 @@ public:
 
     static int nextInt(int n) { return rand() % n; }
 
-    static double nextDouble() { return 1.0 * rand() / (~0U); }
+    static double nextDouble() { return 1.0 * rand() / (~0U>>1); }
 };
 
 #endif // RANDOM_H

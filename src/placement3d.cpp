@@ -10,7 +10,11 @@
 using namespace std;
 
 Placement3D::Placement3D(const BoxList& boxes)
-    : n(boxes.size()), boxes(boxes)
+    : n(boxes.size()), boxes(boxes), is_debug(false),
+      status_factor(10),
+      volume_factor(1),
+      lowest_temperature(0.01),
+      temperature_down_factor(0.99)
 {
 
 }
@@ -23,23 +27,28 @@ Placement3D::~Placement3D()
 /// Simulated Annealing
 void Placement3D::solve()
 {
-    const double INIT_TEMPERATURE = 10000;
-    const double TEMPERATURE_DOWN_FACTOR = 0.99;
-    const double VOLUME_FACTOR = 1;
+    // Get initial temperature
+    double maxV = 0, minV = 1e9;
+    for (int i = 0; i < n * n * status_factor; i++)
+    {
+    	BTTree tmp(boxes);
+        double val = tmp.GetSolution().GetBoundingBoxVolume() * volume_factor;
+        maxV = max(maxV, val);
+        minV = min(minV, val);
+    }
+    double T = (maxV - minV) / log(1 / 0.9);
 
     TTree* tree = new BTTree(boxes);
     sol = tree->GetSolution();
-    double T = INIT_TEMPERATURE;
-    double value = sol.GetBoundingBoxVolume() * VOLUME_FACTOR;
+    double value = sol.GetBoundingBoxVolume() * volume_factor;
 
-    for (;T > 0.01; T *= TEMPERATURE_DOWN_FACTOR)
+    for (;T > lowest_temperature; T *= temperature_down_factor)
     {
-        for (int k = 0; k < 10 * n; k++)
+        for (int k = 0; k < n * n * status_factor; k++)
         {
             // Get next status
             TTree* newTree = new BTTree(*((BTTree*)tree));
             int oper = Random::nextInt(3), p, q, dir;
-            //cout<<oper<<endl;
             switch (oper)
             {
             case 0: // Move
@@ -59,7 +68,7 @@ void Placement3D::solve()
 
             // Get next status value
             Solution newSol = newTree->GetSolution();
-            int newValue = newSol.GetBoundingBoxVolume() * VOLUME_FACTOR;
+            int newValue = newSol.GetBoundingBoxVolume() * volume_factor;
             double d = newValue - value;
 
             // Accept
@@ -72,11 +81,12 @@ void Placement3D::solve()
             }
         }
 
-        /*tree->Print();
-        cout << "temperature: " << T << " \t"
-             << "value: "       << value << " \t"
-             << "volume: "      << sol.GetBoundingBoxVolume() << endl;
-        */
+        if (is_debug)
+        {
+            cout << "temperature: " << T << " \t"
+                 << "value: "       << value << " \t"
+                 << "volume: "      << sol.GetBoundingBoxVolume() << endl;
+        }
     }
     delete tree;
 }

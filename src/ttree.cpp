@@ -102,11 +102,22 @@ void TTree::deleteNode(TTreeNode* node)
             if (i == Mid   && node->m != NULL) tmp = node->m, flag = 0;
             if (i == Right && node->r != NULL) tmp = node->r, flag = 0;
         }
-        deleteNode(tmp);
-        TTreeNode::CopyWithoutBox(tmp, node);
-        if (tmp->l != NULL) tmp->l->fa = tmp;
-        if (tmp->m != NULL) tmp->m->fa = tmp;
-        if (tmp->r != NULL) tmp->r->fa = tmp;
+
+        int soncnt = 0;
+        if (node->l != NULL) ++soncnt;
+        if (node->m != NULL) ++soncnt;
+        if (node->r != NULL) ++soncnt;
+
+        if (soncnt == 1)
+            tmp->fa = node->fa;
+        else
+        {
+            deleteNode(tmp);
+            TTreeNode::CopyWithoutBox(tmp, node);
+            if (tmp->l != NULL) tmp->l->fa = tmp;
+            if (tmp->m != NULL) tmp->m->fa = tmp;
+            if (tmp->r != NULL) tmp->r->fa = tmp;
+        }
     }
     else
         tmp = NULL;
