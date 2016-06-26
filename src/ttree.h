@@ -7,14 +7,21 @@
 #include <vector>
 #include <cstdlib>
 
+/// 一个TTreeNode表示一个Box
+/// 左儿子表示在该箱子的上面
+/// 中儿子表示在该箱子的左边
+/// 右儿子表示在该箱子的右边
 class TTreeNode
 {
 public:
     TTreeNode();
     ~TTreeNode();
 
+    /// l, m, r, fa 是 TTree的左儿子，中儿子，友儿子和父亲
     TTreeNode *l, *m, *r, *fa;
+    /// b_l, b_r 是从 TTree上分离出来的二叉树的左右儿子，其父亲节点和TTree一样
     TTreeNode *b_l, *b_r;
+    /// 储存box的相关信息
     PlacedBox box;
 
     /// Is a leaf node

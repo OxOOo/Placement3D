@@ -5,7 +5,7 @@ OBJECTS = $(addprefix $(OBJDIR)/,$(SOURCES:%.cpp=%.o))
 INCLUDE = ../
 LD_LIBRARY = ../
 LIB = -lplacement3d
-CXXFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -std=c++11 -O2
 
 ifeq ($(shell uname), Linux)
 DEL = rm -f
