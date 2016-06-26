@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdio>
 #include <ctime>
+#include <unistd.h>
 
 using namespace std;
 
@@ -26,6 +27,12 @@ BoxList getRandomBoxes(int n)
 
 void test(int index, int n)
 {
+    int pid = fork();
+    if (pid) {
+        waitpid(pid, NULL, 0);
+        return;
+    }
+
     BoxList boxes = getRandomBoxes(n);
     Placement3D* p3d = new Placement3D(boxes);
     char buffer[1024];
@@ -61,6 +68,8 @@ void test(int index, int n)
     fclose(fout);
 
     delete p3d;
+
+    exit(0);
 }
 
 int main(int argc, char* argv[])
@@ -78,8 +87,8 @@ int main(int argc, char* argv[])
     //test(3, 8);
     //test(4, 10);
     //test(5, 15);
-    test(6, 18);
-    test(7, 20);
+    //test(6, 18);
+    //test(7, 20);
     test(8, 25);
 
     return 0;
