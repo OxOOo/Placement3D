@@ -7,11 +7,16 @@ using namespace std;
 BTTree::BTTree(const BoxList &boxes)
     : TTree(boxes)
 {
+
 }
 
-BTTree::~BTTree(){}
+BTTree::BTTree(const BTTree& tree)
+    : TTree(tree)
+{
+    placed_nodes.clear();
+}
 
-TTree* BTTree::Clone()
+BTTree::~BTTree()
 {
 
 }

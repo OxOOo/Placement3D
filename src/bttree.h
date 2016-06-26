@@ -10,10 +10,8 @@ class BTTree : public TTree
 {
 public:
     BTTree(const BoxList &boxes);
+    BTTree(const BTTree& tree);
     virtual ~BTTree();
-
-    /// A cloned T-tree
-    TTree* Clone() override;
 
     /// Get the optimal solution
     Solution GetSolution() override;

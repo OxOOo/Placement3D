@@ -103,7 +103,7 @@ void Placement3D::solve()
         for (int k = 0; k < 100; k++)
         {
             // Get next status
-            TTree* newTree = tree->Clone();
+            TTree* newTree = new BTTree(*((BTTree*)tree));
             int oper = Random::nextInt(3), p, q, dir;
             switch (oper)
             {
@@ -117,7 +117,7 @@ void Placement3D::solve()
                 break;
             case 2: // Rotate p dir
                 p = Random::nextInt(n);
-                dir = Random::nextInt(5);
+                dir = Random::nextInt(3);
                 newTree->Rotate(p, dir);
                 break;
             }
@@ -140,7 +140,7 @@ void Placement3D::solve()
         tree->Print();
         cout << "temperature: " << T << " \t\t"
              << "value: "       << value << " \t\t"
-             << "volume: "      << value << endl;
+             << "volume: "      << sol.GetBoundingBoxVolume() << endl;
     }
     delete tree;
 }

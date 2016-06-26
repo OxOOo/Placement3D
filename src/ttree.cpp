@@ -13,7 +13,10 @@ TTreeNode::TTreeNode()
 
 }
 
-TTreeNode::~TTreeNode(){}
+TTreeNode::~TTreeNode()
+{
+
+}
 
 TTree::TTree(const BoxList &boxes)
     : N((int)boxes.size())
@@ -49,6 +52,29 @@ TTree::TTree(const BoxList &boxes)
             }
         }
     }
+}
+
+TTree::TTree(const TTree &tree)
+    : N(tree.N)
+{
+    auto copy = [&](TTreeNode* node)
+    {
+        int id = tree.getIdByNode(node);
+        return id == -1 ? NULL : getNodeById(id);
+    };
+
+    nodes = new TTreeNode[N];
+    for (int i = 0; i < N; i ++)
+    {
+        nodes[i].box = tree.nodes[i].box;
+        nodes[i].l = copy(tree.nodes[i].l);
+        nodes[i].m = copy(tree.nodes[i].m);
+        nodes[i].r = copy(tree.nodes[i].r);
+        nodes[i].fa = copy(tree.nodes[i].fa);
+        nodes[i].b_l = copy(tree.nodes[i].b_l);
+        nodes[i].b_r = copy(tree.nodes[i].b_r);
+    }
+    root = copy(tree.root);
 }
 
 TTree::~TTree()
@@ -127,9 +153,22 @@ void TTree::insertToReplace(int p, int q, SonType k)
         nodep->r = nodeq;
 }
 
-TTree* TTree::Clone()
+void TTree::print(TTreeNode* node) const
 {
+    if (node == NULL) return;
+    printf("%d \t\t father: %d \t"
+       "left: %d \t middle: %d \t right: %d\n", getIdByNode(node),
+                                                getIdByNode(node->fa),
+                                                getIdByNode(node->l),
+                                                getIdByNode(node->m),
+                                                getIdByNode(node->r));
 
+    printf("%d %d %d  %d %d %d\n\n", node->box.x, node->box.y, node->box.z,
+                                     node->box.l, node->box.w, node->box.h);
+
+    print(node->l);
+    print(node->m);
+    print(node->r);
 }
 
 void TTree::Move()
@@ -165,31 +204,18 @@ void TTree::Rotate(int p, int dir) // assume that at first it is l w h
     TTreeNode* nodep = getNodeById(p);
     switch (dir)
     {
-    case 1: // l h w
+    case 0: // l h w
         swap(nodep->box.h, nodep->box.w);
         break;
-    case 2: // w l h
+    case 1: // w l h
         swap(nodep->box.l, nodep->box.w);
         break;
-    case 3: // w h l
-        swap(nodep->box.l, nodep->box.w); // w l h
-        swap(nodep->box.w, nodep->box.h);
-        break;
-    case 4: // h l w
-        swap(nodep->box.l, nodep->box.h); // h w l
-        swap(nodep->box.w, nodep->box.h);
-        break;
-    case 5: // h w l
+    case 2: // h w l
         swap(nodep->box.h, nodep->box.l);
         break;
     default:
         break;
     }
-}
-
-void TTree::Print() const
-{
-
 }
 
 void TTree::Debug()

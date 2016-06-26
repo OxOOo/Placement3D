@@ -36,6 +36,7 @@ public:
     enum SonType {Left = 0, Mid, Right};
 
     TTree(const BoxList &boxes);
+    TTree(const TTree &tree);
     virtual ~TTree();
 
     /// Move a box to another place randomly
@@ -48,10 +49,7 @@ public:
     void Rotate(int p, int dir);
 
     /// Print the T-tree
-    void Print() const;
-
-    /// A cloned T-tree
-    virtual TTree* Clone();
+    void Print() const { print(root); }
 
     /// Get the optimal solution
     virtual Solution GetSolution() = 0;
@@ -67,7 +65,7 @@ protected:
     /// array of T-tree nodes
     TTreeNode* nodes;
 
-    /// Delete the Tree Node p
+    /// Recursive to delete the Tree Node p
     void deleteNode(TTreeNode *nodep);
 
     /// Delete the box p
@@ -79,8 +77,12 @@ protected:
     /// Insert the box p to box q's place and let box q be the k-th chlid of box p
     void insertToReplace(int p, int q, SonType k);
 
+    /// Recursive to print
+    void print(TTreeNode* node) const;
+
     /// Get T-tree node by box id
-    TTreeNode* getNodeById(int id) { return &nodes[id]; }
+    TTreeNode* getNodeById(int id) const { return &nodes[id]; }
+    int getIdByNode(TTreeNode* node) const { return node == NULL ? -1 : node - nodes; }
 };
 
 #endif // T_TREE_H

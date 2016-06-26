@@ -27,26 +27,26 @@ int Solution::GetBoxesVolume()
 
 bool Solution::Check()
 {
-	// FIXME if more efficient method exists
-	for (auto box1 = boxes.begin(); box1 != boxes.end(); ++box1)
-		for (auto box2 = boxes.begin(); box2 != boxes.end(); ++box2)
-		{
-			if (box1 == box2) continue;
-			if (pointInBox(box1->x, box1->y, box1->z, box2)) return 0;
-			if (pointInBox(box1->x, box1->y, box1->z + box1->h, box2)) return 0;
-			if (pointInBox(box1->x, box1->y + box1->w, box1->z, box2)) return 0;
-			if (pointInBox(box1->x, box1->y + box1->w, box1->z + box1->h, box2)) return 0;
-			if (pointInBox(box1->x + box1->l, box1->y, box1->z, box2)) return 0;
-			if (pointInBox(box1->x + box1->l, box1->y, box1->z + box1->h, box2)) return 0;
-			if (pointInBox(box1->x + box1->l, box1->y + box1->w, box1->z, box2)) return 0;
-			if (pointInBox(box1->x + box1->l, box1->y + box1->w, box1->z + box1->h, box2)) return 0;
-		}
-	return 1;
+    // FIXME if more efficient method exists
+    for (auto box1 = boxes.begin(); box1 != boxes.end(); ++box1)
+        for (auto box2 = boxes.begin(); box2 != boxes.end(); ++box2)
+        {
+            if (box1 == box2) continue;
+            if (pointInBox(box1->x,  box1->y,  box1->z,  box2)) return 0;
+            if (pointInBox(box1->x,  box1->y,  box1->z2, box2)) return 0;
+            if (pointInBox(box1->x,  box1->y2, box1->z,  box2)) return 0;
+            if (pointInBox(box1->x,  box1->y2, box1->z2, box2)) return 0;
+            if (pointInBox(box1->x2, box1->y,  box1->z,  box2)) return 0;
+            if (pointInBox(box1->x2, box1->y,  box1->z2, box2)) return 0;
+            if (pointInBox(box1->x2, box1->y2, box1->z,  box2)) return 0;
+            if (pointInBox(box1->x2, box1->y2, box1->z2, box2)) return 0;
+        }
+    return 1;
 }
 
-bool Solution::pointInBox(int x, int y, int z, PlacedBoxList::iterator box)
+bool Solution::pointInBox(int x, int y, int z, const PlacedBoxList::iterator& box)
 {
-	if (x > box->x && x < box->x + box->l && y > box->y && y < box->y + box->w && z > box->z && z < box->z + box->h)
-		return 1;
-	return 0;
+    return x > box->x && x < box->x2 &&
+           y > box->y && y < box->y2 &&
+           z > box->z && z < box->z2;
 }
