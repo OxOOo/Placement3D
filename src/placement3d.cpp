@@ -78,6 +78,8 @@ void Placement3D::solve()
                 value = newValue;
                 delete tree;
                 tree = newTree;
+            } else {
+                delete newTree;
             }
 			else
 				delete newTree;

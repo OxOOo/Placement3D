@@ -7,6 +7,8 @@
 #include <cstdio>
 #include <ctime>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 using namespace std;
 
@@ -89,7 +91,11 @@ int main(int argc, char* argv[])
     //test(5, 15);
     //test(6, 18);
     //test(7, 20);
-    test(8, 25);
+    //test(8, 25);
+    test(9, 28);
+    test(10, 30);
+    test(11, 33);
+    test(12, 37);
 
     return 0;
 }
