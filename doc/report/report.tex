@@ -1,0 +1,118 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{ctex}						%windows
+\usepackage{ccmap}
+\usepackage{float}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{courier}
+%\usepackage{CJKutf8}					%Linux
+%\usepackage{CJKulem}
+\usepackage{makeidx}
+\usepackage{titling}
+\usepackage{listings}
+\usepackage{amsfonts}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{lastpage}
+\usepackage{latexsym}
+\usepackage{multirow}
+\usepackage{textcomp}
+\usepackage{extramarks}
+\usepackage{indentfirst}
+\usepackage[linesnumbered,ruled,longend]{algorithm2e}
+\usepackage[colorlinks,citecolor=green,linkcolor=blue,menucolor=red,
+			bookmarksnumbered=false,bookmarksopen=false,
+			%unicode,					%Linux
+			CJKbookmarks,				%windows
+			pdftex]{hyperref}
+%\makeindex %索引
+
+%\AtBeginDocument{\begin{CJK*}{UTF8}{song}\CJKindent\sloppy\CJKspace\CJKtilde\AtEndDocument{\end{CJK*}}}			%Linux
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  language=Octave,                % the language of the code
+  basicstyle=\footnotesize\ttfamily,      % the size of the fonts that are used for the code
+ % numbers=left,                   % where to put the line-numbers
+%  numberstyle=\color{gray},  	% the style that is used for the line-numbers
+ % stepnumber=1,                   % the step between two line-numbers. If it's 1, each line
+                                  % will be numbered
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  tabsize=4,                      % sets default tabsize to 2 spaces
+  captionpos=false,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},          % keyword style
+  commentstyle=\color{dkgreen},       % comment style
+  stringstyle=\color{mauve},         % string literal style
+  escapeinside={\%*}{*)},            % if you want to add LaTeX within your code
+  morekeywords={*,...},               % if you want to add more keywords to the set
+  extendedchars=false				
+}
+
+\pretitle{~\newline\newline\newline\newline\newline\begin{center}\Huge}
+\posttitle{\end{center}}
+
+\renewcommand{\contentsname}{目\quad 录}
+\renewcommand{\abstractname}{摘\quad 要}
+\renewcommand{\indexname}{索\quad 引}
+\renewcommand{\listfigurename}{插图目录}
+\renewcommand{\listtablename}{表格目录}
+%\renewcommand{\refname}{参考文献}
+\renewcommand{\figurename}{图}
+\renewcommand{\tablename}{表}
+\newtheorem{lemma}{\hspace{2em}引理}[section]
+\newcommand{\fleft}[1]{\begin{flushleft}#1\end{flushleft}}
+\newcommand{\fright}[1]{\begin{flushright}#1\end{flushright}}
+\newcommand{\fcenter}[1]{\begin{center}#1\end{center}}
+\newcommand{\thistitle}{}
+\newcommand\mfrac[2]{\dfrac{#1\smash[b]{\strut}}{#2\smash[t]{\strut}}}
+\titleformat*{\section}{\centering\Large\bfseries}
+
+%字体
+\newcommand{\song}{\CJKfamily{song}}	% 宋体
+\newcommand{\hei}{\CJKfamily{hei}}		% 黑体
+\newcommand{\fs}{\CJKfamily{fs}}		% 仿宋
+\newcommand{\kai}{\CJKfamily{kai}}		% 楷体
+\newcommand{\li}{\CJKfamily{li}}		% 隶书
+\newcommand{\you}{\CJKfamily{you}}		% 幼圆
+
+
+\begin{document}
+	%页眉页脚
+	\hypersetup{pdftitle={Team Project Report},pdfauthor={Equation}}
+	\pagestyle{fancy}
+	\lhead{\footnotesize\textrm\thistitle}
+	\rhead{\footnotesize\textrm\nouppercase\firstleftmark}
+
+	\newgeometry{left=2cm,right=2cm}
+	\title{{\large Team Project} \\ {\huge 3D Placement}\\ {\LARGE Report}}
+	\author{\kai	计~54 \quad 李泽龙 \quad 2015011321 \\
+					计~54 \quad 贾越凯 \quad 2015011335 \\ 
+				 	计~54 \quad 陈宇 \quad 2015011343 \\}
+	\date{\fs 2016~年~6~月}
+	\maketitle
+
+	\restoregeometry
+	\newpage
+	\tableofcontents
+
+	\include{body}
+
+\end{document}
