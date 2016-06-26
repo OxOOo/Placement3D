@@ -31,7 +31,7 @@ void Placement3D::solve()
     double maxV = 0, minV = 1e9;
     for (int i = 0; i < n * n * status_factor; i++)
     {
-    	BTTree tmp(boxes);
+        BTTree tmp(boxes);
         double val = tmp.GetSolution().GetBoundingBoxVolume() * volume_factor;
         maxV = max(maxV, val);
         minV = min(minV, val);
@@ -78,11 +78,9 @@ void Placement3D::solve()
                 value = newValue;
                 delete tree;
                 tree = newTree;
-            } else {
-                delete newTree;
             }
-			else
-				delete newTree;
+            else
+                delete newTree;
         }
 
         if (is_debug)
