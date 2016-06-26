@@ -2,7 +2,7 @@ SOURCES = $(wildcard *.cpp)
 HEADERS = $(wildcard *.h)
 OBJDIR = objs
 OBJECTS = $(addprefix $(OBJDIR)/,$(SOURCES:%.cpp=%.o))
-CXXFLAGS = -Wall -std=c++11 -fPIC
+CXXFLAGS = -Wall -std=c++11 -fPIC -O2
 
 ifeq ($(shell uname), Linux)
 DEL = rm -f
