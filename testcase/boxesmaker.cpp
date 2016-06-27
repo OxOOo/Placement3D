@@ -10,7 +10,7 @@ int main()
 {
 	srand(time(0));
 	FILE* fout = fopen("box.txt", "w");
-	int N = rand() % MaxN + 1;
+	int N = 100;
 	fprintf(fout, "%d\n" , N);
 	for (int i = 0; i < N; ++i)
 	{

@@ -21,8 +21,10 @@ int maxRange;
 double scaleRatio;
 ArcBall* arcBall = new ArcBall(WIDTH, HEIGHT);
 
+/// Arguments
 char *inFile = 0, *outFile = 0;
-bool _help, _s, _p;
+bool _help, _s, _p, _d;
+double _sf = 10, _vf = 1, _lt = 0.01, _tdf = 0.99;
 
 void reshape(int w, int h)
 {
@@ -30,7 +32,7 @@ void reshape(int w, int h)
     glViewport((w - s) / 2, (h - s) / 2, s, s);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45, 1, 1, 100);
+    gluPerspective(45, 1, 0.1, 100);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     arcBall->setBounds(w, h);
@@ -210,6 +212,11 @@ int getArgs(int argc, char* argv[])
         if (argv[i][0] == '-')
         {
             if (!strcmp(argv[i], "--help")) _help = true;
+            else if (!strcmp(argv[i], "-d")) _d = true;
+            else if (!strcmp(argv[i], "-sf")) sscanf(argv[++i], "%lf", &_sf);
+            else if (!strcmp(argv[i], "-vf")) sscanf(argv[++i], "%lf", &_vf);
+            else if (!strcmp(argv[i], "-lt")) sscanf(argv[++i], "%lf", &_lt);
+            else if (!strcmp(argv[i], "-tdf")) sscanf(argv[++i], "%lf", &_tdf);
             else if (!strcmp(argv[i], "-s") || !strcmp(argv[i], "-p") || !strcmp(argv[i], "-o"))
             {
                 if (i+1 == argc)
@@ -272,9 +279,17 @@ int init(int argc, char* argv[])
         printf("Usage: %s [OPTIONS]\n"
                "OPTIONS:\n"
                "  --help          Show this information\n"
+               "\n"
+               "  -d              Debug mode\n"
+               "  -sf <arg>       Set status factor\n"
+               "  -vf <arg>       Set volume factor\n"
+               "  -lt <arg>       Set lowest temperature\n"
+               "  -tdf <arg>      Set temperature down factor\n"
+               "\n"
                "  -s <file>       Load a placement solution from <file>\n"
                "  -p <file>       Load an unsolved placement problem from <file>\n"
-               "  -o <file>       Save the placement solution into <file> (with -p option)\n", argv[0]);
+               "  -o <file>       Save the placement solution into <file> (with -p option)\n"
+               "\n", argv[0]);
         return 1;
     }
 
@@ -282,8 +297,14 @@ int init(int argc, char* argv[])
     if (_p)
     {
         BoxList boxes = Box::LoadBoxesFromFile(inFile);
-
         Placement3D* p3d = new Placement3D(boxes);
+
+        if (_d) p3d->SetDebug();
+        p3d->SetStatusFactor(_sf);
+        p3d->SetVolumeFactor(_vf);
+        p3d->SetLowestTemperature(_lt);
+        p3d->SetTemperatureDownFactor(_tdf);
+
         solution = p3d->GetSolution();
         delete p3d;
 
