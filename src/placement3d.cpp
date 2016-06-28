@@ -31,7 +31,7 @@ void Placement3D::solve()
     double maxV = 0, minV = 1e9;
     for (int i = 0; i < n * status_factor; i++)
     {
-    	BTTree tmp(boxes);
+        BTTree tmp(boxes);
         double val = tmp.GetSolution().GetBoundingBoxVolume() * volume_factor;
         maxV = max(maxV, val);
         minV = min(minV, val);
@@ -44,6 +44,7 @@ void Placement3D::solve()
 
     for (;T > lowest_temperature; T *= temperature_down_factor)
     {
+        int times = 0;
         for (int k = 0; k < n * status_factor; k++)
         {
             // Get next status
@@ -78,16 +79,18 @@ void Placement3D::solve()
                 value = newValue;
                 delete tree;
                 tree = newTree;
-            } else {
-                delete newTree;
+                times++;
             }
+            else
+                delete newTree;
         }
 
         if (is_debug)
         {
-            cout << "temperature: " << T << " \t"
-                 << "value: "       << value << " \t"
-                 << "volume: "      << sol.GetBoundingBoxVolume() << endl;
+            cout << "Temp.: "         << T << " \t"
+                 << "Value: "         << value << " \t"
+                 << "Volume: "        << sol.GetBoundingBoxVolume() << " \t"
+                 << "Accept prob.: "  << times / (n * status_factor) << endl;
         }
     }
     delete tree;
