@@ -27,7 +27,7 @@ BoxList getRandomBoxes(int n)
     return boxes;
 }
 
-void test(int index, int n)
+void test(int index, int n, int status_factor = -1)
 {
     int pid = fork();
     if (pid) {
@@ -37,6 +37,7 @@ void test(int index, int n)
 
     BoxList boxes = getRandomBoxes(n);
     Placement3D* p3d = new Placement3D(boxes);
+    if (status_factor > 0) p3d->SetStatusFactor(status_factor);
     char buffer[1024];
 
     sprintf(buffer, "statistic/box%d.txt", index);
@@ -92,10 +93,18 @@ int main(int argc, char* argv[])
     //test(6, 18);
     //test(7, 20);
     //test(8, 25);
-    test(9, 28);
-    test(10, 30);
-    test(11, 33);
-    test(12, 37);
+    //test(9, 28);
+    //test(10, 30);
+    //test(11, 33);
+    //test(12, 37, 100);
+    //test(13, 45, 100);
+    //test(14, 50, 50);
+    //test(15, 60, 40);
+    //test(16, 65, 60);
+    //test(17, 70, 60);
+    //test(18, 80, 50);
+    //test(19, 90, 40);
+    test(20, 100, 10);
 
     return 0;
 }

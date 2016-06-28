@@ -1,0 +1,6 @@
+Used Time : 211.564 s
+Total number of boxes: 37
+Total volume of boxes: 8440
+Volume of bounding box: 9300
+Wasted volume: 860
+Wasted volume ratio: 9.247%
