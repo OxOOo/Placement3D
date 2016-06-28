@@ -36,7 +36,7 @@ void Placement3D::solve()
         maxV = max(maxV, val);
         minV = min(minV, val);
     }
-    double T = (maxV - minV) / log(1 / 0.8) / 2;
+    double T = (maxV - minV) / log(1 / 0.8);
 
     TTree* tree = new BTTree(boxes);
     sol = tree->GetSolution();
