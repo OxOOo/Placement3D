@@ -235,12 +235,22 @@ int getArgs(int argc, char* argv[])
                     inFile = argv[++i];
                 }
             }
+            else
+            {
+                printf("ERROR: unrecognized command line option '%s'\n", argv[i]);
+                return 1;
+            }
         }
         else
         {
             printf("ERROR: unrecognized command line option '%s'\n", argv[i]);
             return 1;
         }
+    }
+    if (_s && _p)
+    {
+        printf("ERROR: option '-s' and '-p' can NOT be used together\n");
+        return 1;
     }
     return 0;
 }

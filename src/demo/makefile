@@ -50,6 +50,6 @@ explain:
 	@echo "User Sources: $(SOURCES)"
 	@echo "User Objects: $(OBJECTS)"
 
-DEMO_ARGS ?= -p box.txt -s sol.txt
+DEMO_ARGS ?= -p box.txt -o sol.txt
 run:
 	./$(TARGET) $(DEMO_ARGS)
